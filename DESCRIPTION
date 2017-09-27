@@ -1,0 +1,17 @@
+Package: opendatabio
+Title: Imports and Exports Data From an OpenDataBio Server
+Version: 0.0.1
+Authors@R: c(
+    person("Andre", "Chalom", email = "andrechalom@gmail.com", role = c("aut", "cre")),
+    person("Alberto", "Vicentini", email = "vicentini.beto@gmail.com", role = c("aut")),
+    person("Alexandre", "Adalardo", email = "aleadalardo@gmail.com", role = c("aut")))
+Description: This is an R package for interacting with OpenDataBio web services.
+    OpenDataBio is a modern system for storing and retrieving plant data - 
+    floristics, ecology and monitoring. See our project page at https://github.com/opendatabio.
+Depends: R (>= 3.2.0)
+Imports: httr,
+         jsonlite
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
