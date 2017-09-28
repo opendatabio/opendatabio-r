@@ -2,23 +2,20 @@
 % Please edit documentation in R/functions.R
 \name{odb_params}
 \alias{odb_params}
-\title{A convenience helper to transform R named vectors or lists to HTML syntax.
-This is normally used inside the getter functions. Note that if this function
-receives a string, it returns the same string. This can be used to construct more
-complex queries.}
+\title{Convert query parameters}
 \usage{
 odb_params(params = c())
 }
 \arguments{
-\item{params}{named list, named vector or string.}
+\item{params}{named list, named vector or character string.}
 }
 \value{
-string
+character
 }
 \description{
 A convenience helper to transform R named vectors or lists to HTML syntax.
 This is normally used inside the getter functions. Note that if this function
-receives a string, it returns the same string. This can be used to construct more
+receives a character string, it returns the same string. This can be used to construct more
 complex queries.
 }
 \examples{
