@@ -1,4 +1,4 @@
-# opendatabio-r
+# opendatabio R package
 
 This package implements a client to the OpenDataBio API. This should allow for users
 with some experience in R to query the database, import and export data, and run common analyses.
@@ -28,7 +28,8 @@ Then, write a request using the [OpenDataBio API documentation](https://github.c
 and pass the configuration object:
 
 ```R
-> taxons = odb_get_taxons(list(valid = TRUE, fields = "id,fullname,levelName", limit=10), cfg)
+> library(opendatabio)
+> taxons = odb_get_taxons(list(valid = TRUE, fields = "id,fullname,levelName", limit=5), cfg)
 > print(taxons)
       id        fullname levelName
     1  1   Excepturiceae    Family
