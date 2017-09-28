@@ -11,8 +11,8 @@ functions directly.
 Installation is currently done only from GitHub. 
 
 ```R
-library(devtools)
-install_github("opendatabio/opendatabio-r")
+> library(devtools)
+> install_github("opendatabio/opendatabio-r")
 ```
 
 ## Basic usage
@@ -21,13 +21,19 @@ The first to be done is create a `odb_config` object to hold the configuration f
 OpenDataBio server. For anonymous use to the development server, simply use its default configuration:
 
 ```R
-cfg = odb_config()
+> cfg = odb_config()
 ```
 
 Then, write a request using the [OpenDataBio API documentation](https://github.com/opendatabio/opendatabio/wiki/API),
 and pass the configuration object:
 
 ```R
-taxons = odb_get_taxons(list(valid = TRUE, format = "simple"), cfg)
-head(taxons)
+> taxons = odb_get_taxons(list(valid = TRUE, fields = "id,fullname,levelName", limit=10), cfg)
+> print(taxons)
+      id        fullname levelName
+    1  1   Excepturiceae    Family
+    2  2 Perferendisceae    Family
+    3  3  Cupiditateceae    Family
+    4  4     Aliquamceae    Family
+    5  5        Quiaceae    Family
 ```
