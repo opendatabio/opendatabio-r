@@ -4,7 +4,7 @@
 \alias{odb_get_taxons}
 \title{Base functions}
 \usage{
-odb_get_taxons(params = NULL)
+odb_get_taxons(params = NULL, odb_cfg = .odb_cfg)
 }
 \description{
 These are some basic getter functions to show the uses of the API

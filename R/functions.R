@@ -6,7 +6,8 @@
 #' @export
 #' @import httr
 #' @import jsonlite
-odb_get_taxons <- function(params = NULL) {
+odb_get_taxons <- function(params = c(), odb_cfg = .odb_cfg) {
+    params = odb_params(params)
     base_url = "http://localhost/opendatabio/api/"
     api_version = "v0/"
     endpoint = "taxons?"
@@ -19,4 +20,28 @@ odb_get_taxons <- function(params = NULL) {
     if(headers(result)$'content-type' != "application/json")
         stop("Wrong answer type from server: ", headers(result)$'content-type')
     fromJSON(toJSON(content(result)))$data
+}
+
+
+#' A convenience helper to transform R named vectors or lists to HTML syntax.
+#' This is normally used inside the getter functions. Note that if this function
+#' receives a string, it returns the same string. This can be used to construct more
+#' complex queries.
+#' @return string
+#' @param params named list, named vector or string.
+#' @examples
+#' odb_params(list(level=210, valid=TRUE))
+#' odb_params("search=edulis")
+#' @export
+odb_params <- function(params = c()) {
+    if (class(params) == "character") {
+        return(params)
+    }
+    # we convert logical values to numeric
+    logic = sapply(params, is.logical)
+    params[logic] = as.numeric(params[logic])
+    # and "connect" them to their names
+    params = paste(names(params),params,sep="=")
+    # finally, we paste together all the values
+    return(paste(params, collapse="&"))
 }
