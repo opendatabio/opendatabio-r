@@ -4,18 +4,18 @@
 \alias{odb_params}
 \title{Convert query parameters}
 \usage{
-odb_params(params = c())
+odb_params(params = list())
 }
 \arguments{
-\item{params}{named list, named vector or character string.}
+\item{params}{named list or character string.}
 }
 \value{
 character
 }
 \description{
-A convenience helper to transform R named vectors or lists to HTML syntax.
+A convenience helper to transform R named lists to HTML syntax.
 This is normally used inside the getter functions. Note that if this function
-receives a character string, it returns the same string. This can be used to construct more
+receives an unnamed character string, it returns the same string. This can be used to construct more
 complex queries.
 }
 \examples{
