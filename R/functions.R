@@ -30,24 +30,28 @@ odb_send_get = function(params, odb_cfg, endpoint) {
 
 #' Convert query parameters
 #'
-#' A convenience helper to transform R named vectors or lists to HTML syntax.
+#' A convenience helper to transform R named lists to HTML syntax.
 #' This is normally used inside the getter functions. Note that if this function
-#' receives a character string, it returns the same string. This can be used to construct more
+#' receives an unnamed character string, it returns the same string. This can be used to construct more
 #' complex queries.
 #' 
 #' @return character
-#' @param params named list, named vector or character string.
+#' @param params named list or character string.
 #' @examples
 #' odb_params(list(level=210, valid=TRUE))
 #' odb_params("search=edulis")
 #' @export
-odb_params <- function(params = c()) {
-    if (class(params) == "character") {
+odb_params <- function(params = list()) {
+    if (class(params) == "character" && length(names(params)) == 0) {
         return(params)
+    }
+    if (! is.list(params)) {
+        stop("odb_params expects either a list or an unnamed character string")
     }
     # we convert logical values to numeric
     logic = sapply(params, is.logical)
-    params[logic] = as.numeric(params[logic])
+    if (length(logic))
+        params[logic] = as.numeric(params[logic])
     # and "connect" them to their names
     params = paste(names(params),params,sep="=")
     # finally, we paste together all the values
@@ -84,7 +88,8 @@ odb_config <- function(base_url, token, api_version, ...) {
     }
     if (missing (api_version))
         api_version = "v0"
-    cfg$base_url = paste(cfg$base_url, api_version, sep="/")
+    if (! is.null(api_version))
+        cfg$base_url = paste(cfg$base_url, api_version, sep="/")
 
     headers = c(accept("application/json"), 
                 content_type("application/json"),

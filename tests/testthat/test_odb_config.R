@@ -23,5 +23,5 @@ test_that("odb_config with null version", {
     cfg = odb_config(api_version = NULL);
     expect_is(cfg, "list")
     expect_is(cfg$base_url, "character")
-    expect_equal(cfg$base_url, "http://opendatabio.ib.usp.br/opendatabio/api/") # "stray" / but it's ok
+    expect_equal(cfg$base_url, "http://opendatabio.ib.usp.br/opendatabio/api") 
 })
