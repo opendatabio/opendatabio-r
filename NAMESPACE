@@ -2,9 +2,12 @@
 
 export(odb_config)
 export(odb_get_jobs)
+export(odb_get_locations)
 export(odb_get_taxons)
 export(odb_import_taxons)
 export(odb_params)
 export(odb_test)
+export(plot_locations)
+import(graphics)
 import(httr)
 import(jsonlite)

@@ -14,6 +14,8 @@ character
 }
 \description{
 A convenience helper to transform R named lists to HTML syntax.
+}
+\details{
 This is normally used inside the getter functions. Note that if this function
 receives an unnamed character string, it returns the same string. This can be used to construct more
 complex queries.

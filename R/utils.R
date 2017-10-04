@@ -36,6 +36,7 @@ odb_send_post = function(body, odb_cfg, endpoint) {
 #' Convert query parameters
 #'
 #' A convenience helper to transform R named lists to HTML syntax.
+#'
 #' This is normally used inside the getter functions. Note that if this function
 #' receives an unnamed character string, it returns the same string. This can be used to construct more
 #' complex queries.
@@ -65,8 +66,7 @@ odb_params <- function(params = list()) {
 
 #' Generate the connection configuration
 #' 
-#' Use this function to generate a base configuration for all the other
-#' functions. 
+#' Use this function to generate a base configuration for all the other functions. 
 #' 
 #' @return list
 #' @param base_url character. The base URL for the API calls. It should start with the protocol ("http") 
@@ -115,4 +115,25 @@ default_ua = function() {
       `r-curl` = as.character(utils::packageVersion("curl")),
       httr = as.character(utils::packageVersion("httr")))
     paste0(names(versions), "/", versions, collapse = " ")
+}
+
+#' Simple plotting function
+#'
+#' This is a plotting example for using rgeos with OpenDataBio data.
+#' 
+#' @export
+#' @import graphics
+#' @param locations data.frame, as returned by \code{\link{odb_get_locations}}
+plot_locations = function(locations) {
+    if (! is.data.frame(locations) || ! 'geom' %in% names(locations))
+        stop("Locations needs to be a data.frame with a 'geom' column")
+    if (! requireNamespace("rgeos", quietly = TRUE)) 
+        stop("Please install rgeos: install.packages('rgeos')")
+    to_map = rgeos::readWKT(locations$geom[[1]])
+    plot(to_map)
+    if (nrow(locations) == 1) return();
+    for (i in 2:nrow(locations)) {
+        to_map = rgeos::readWKT(locations$geom[[i]])
+        plot(to_map, add=TRUE)
+    }
 }

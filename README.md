@@ -10,6 +10,8 @@ functions directly.
 
 Installation is currently done only from GitHub. 
 
+The functions that plot maps use libgeos, so you probably want to `apt-get install libgeos`.
+
 ```R
 > library(devtools)
 > install_github("opendatabio/opendatabio-r")

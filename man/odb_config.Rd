@@ -21,8 +21,7 @@ from user to user! Leave blank for anonymous login.}
 list
 }
 \description{
-Use this function to generate a base configuration for all the other
-functions.
+Use this function to generate a base configuration for all the other functions.
 }
 \examples{
 cfg = odb_config(

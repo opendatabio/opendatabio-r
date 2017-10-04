@@ -18,7 +18,7 @@
 #' @rdname functions
 odb_get_taxons <- function(params = list(), odb_cfg = odb_config()) {
     response = odb_send_get(params, odb_cfg, "taxons")
-    return (fromJSON(content(response, "text"))$data)
+    return (fromJSON(toJSON(content(response)))$data)
 }
 
 #' @export 
@@ -28,19 +28,26 @@ odb_import_taxons <- function(data, odb_cfg = odb_config()) {
     id = fromJSON(toJSON(content(response)))$userjob
     # Wait a second so that the job may start processing
     Sys.sleep(1)
-    return (odb_get_jobs(list(id = id, fields="id,status"), odb_cfg))
+    return (odb_get_jobs(list(id = id), odb_cfg))
 }
 
 #' @export
 #' @rdname functions
 odb_test <- function(odb_cfg = odb_config()) {
     response = odb_send_get(list(), odb_cfg, "/")
-    return (fromJSON(content(response, "text"))$data)
+    return (fromJSON(toJSON(content(response)))$data)
 }
 
 #' @export
 #' @rdname functions
 odb_get_jobs <- function(params = list(), odb_cfg = odb_config()) {
     response = odb_send_get(params, odb_cfg, "jobs")
-    return (fromJSON(content(response, "text"))$data)
+    return(fromJSON(toJSON(content(response)))$data)
+}
+
+#' @export
+#' @rdname functions
+odb_get_locations <- function(params = list(), odb_cfg = odb_config()) {
+    response = odb_send_get(params, odb_cfg, "locations")
+    return(fromJSON(toJSON(content(response)))$data)
 }
