@@ -130,10 +130,10 @@ plot_locations = function(locations) {
     if (! requireNamespace("rgeos", quietly = TRUE)) 
         stop("Please install rgeos: install.packages('rgeos')")
     to_map = rgeos::readWKT(locations$geom[[1]])
-    plot(to_map)
+    rgeos::plot(to_map)
     if (nrow(locations) == 1) return();
     for (i in 2:nrow(locations)) {
         to_map = rgeos::readWKT(locations$geom[[i]])
-        plot(to_map, add=TRUE)
+        rgeos::plot(to_map, add=TRUE)
     }
 }

@@ -6,6 +6,7 @@
 \alias{odb_test}
 \alias{odb_get_jobs}
 \alias{odb_get_locations}
+\alias{odb_import_locations}
 \title{Base functions}
 \usage{
 odb_get_taxons(params = list(), odb_cfg = odb_config())
@@ -17,6 +18,8 @@ odb_test(odb_cfg = odb_config())
 odb_get_jobs(params = list(), odb_cfg = odb_config())
 
 odb_get_locations(params = list(), odb_cfg = odb_config())
+
+odb_import_locations(data, odb_cfg = odb_config())
 }
 \arguments{
 \item{params}{named list, named vector or character string. Represents the parameters to be sent for the server, such as "valid=TRUE" to return only valid taxons. See \code{\link{odb_params}}}

@@ -31,6 +31,7 @@ and pass the configuration object:
 
 ```R
 > library(opendatabio)
+> cfg = odb_config(token="YourToken")
 > taxons = odb_get_taxons(list(valid = TRUE, fields = "id,fullname,levelName", limit=5), cfg)
 > print(taxons)
       id        fullname levelName
@@ -39,4 +40,15 @@ and pass the configuration object:
     3  3  Cupiditateceae    Family
     4  4     Aliquamceae    Family
     5  5        Quiaceae    Family
+```
+
+Spatial data can be imported from http://www.gadm.org/country, download the R file format. 
+They can be then loaded and imported to the database.
+
+```R
+> library(opendatabio)
+> library(rgeos)
+> cfg = odb_config(token="YourToken")
+> bra0 = readRDS("/path/to/BRA_adm0.rds")
+> odb_import_locations(bra0, cfg)
 ```
