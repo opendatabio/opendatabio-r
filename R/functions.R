@@ -55,46 +55,13 @@ odb_get_locations <- function(params = list(), odb_cfg = odb_config()) {
 #' @export 
 #' @rdname functions
 odb_import_locations <- function(data, odb_cfg = odb_config()) {
-    if (is.data.frame(data)) {
-        response = odb_send_post(data, odb_cfg, "locations")
-        id = fromJSON(toJSON(content(response)))$userjob
-        # Wait a second so that the job may start processing
-        Sys.sleep(1)
-        return (odb_get_jobs(list(id = id), odb_cfg))
-    } 
+    if (class(data) != "data.frame") 
+        stop ("Currently odb_import_taxons only accepts data.frame, please convert your data")
+    cat("Sending ODB request (filesize = " , utils::object.size(data), ")\n")
+    response = odb_send_post(data, odb_cfg, "locations")
+    id = fromJSON(toJSON(content(response)))$userjob
+    # Wait a second so that the job may start processing
+    Sys.sleep(1)
+    return (odb_get_jobs(list(id = id), odb_cfg))
+} 
 
-    if (class(data) == "SpatialPolygonsDataFrame") {
-        cat ("Converting to data.frame...\n")
-        ## Extracts datum
-        str = data@proj4string@projargs
-        datum = gsub(".*datum=(.*?) .*", "\\1", str)
-
-        if('NAME_3' %in% names(data)) {
-            name = data$NAME_3
-            adm_level = 3
-            parent = data$NAME_2
-            geom = rgeos::writeWKT(data, TRUE)
-        } else if('NAME_2' %in% names(data)) {
-            name = data$NAME_2
-            adm_level = 2
-            parent = data$NAME_1 
-            geom = rgeos::writeWKT(data, TRUE)
-        } else if('NAME_1' %in% names(data)) {
-            name = data$NAME_1
-            adm_level = 1
-            parent = data$NAME_0
-            geom = rgeos::writeWKT(data, TRUE)
-        } else {
-            # TODO: check this!
-            name = data$NAME_FAO
-            adm_level = 0
-            parent = NA
-            geom = rgeos::writeWKT(data, FALSE)
-        }
-        newdata = data.frame(name = name, adm_level = adm_level, parent = parent, datum=datum, geom=geom)
-        cat("Sending ODB request (filesize = " , utils::object.size(newdata) , ")\n")
-        return(odb_import_locations(newdata, odb_cfg))
-    }
-
-    stop ("Unrecognized data format! Currently odb_import_taxons accepts: data.frame, SpatialPolygonsDataFrame")
-}

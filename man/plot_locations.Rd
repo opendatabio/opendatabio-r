@@ -4,10 +4,12 @@
 \alias{plot_locations}
 \title{Simple plotting function}
 \usage{
-plot_locations(locations)
+plot_locations(locations, ...)
 }
 \arguments{
 \item{locations}{data.frame, as returned by \code{\link{odb_get_locations}}}
+
+\item{\dots}{additional graphic parameters}
 }
 \description{
 This is a plotting example for using rgeos with OpenDataBio data.

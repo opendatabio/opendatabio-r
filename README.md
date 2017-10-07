@@ -27,12 +27,13 @@ OpenDataBio server. For anonymous use to the development server, simply use its 
 ```
 
 Then, write a request using the [OpenDataBio API documentation](https://github.com/opendatabio/opendatabio/wiki/API),
-and pass the configuration object:
+and pass the configuration object. The parameters can be passed in a few different ways, check the documentation
+for the `odb_params` function:
 
 ```R
 > library(opendatabio)
 > cfg = odb_config(token="YourToken")
-> taxons = odb_get_taxons(list(valid = TRUE, fields = "id,fullname,levelName", limit=5), cfg)
+> taxons = odb_get_taxons(list(valid = TRUE, fields = c("id","fullname","levelName"), limit=5), cfg)
 > print(taxons)
       id        fullname levelName
     1  1   Excepturiceae    Family
@@ -43,12 +44,13 @@ and pass the configuration object:
 ```
 
 Spatial data can be imported from http://www.gadm.org/country, download the R file format. 
-They can be then loaded and imported to the database.
+They can be then loaded and imported to the database. Other spatial data formats, such as shapefiles 
+(eg, from [Brazilian Ministry of the Environment](http://www.mma.gov.br/areas-protegidas/cadastro-nacional-de-ucs/dados-georreferenciados)) need to converted to `SpatialPolygonDataFrame`s.
 
 ```R
 > library(opendatabio)
 > library(rgeos)
 > cfg = odb_config(token="YourToken")
 > bra0 = readRDS("/path/to/BRA_adm0.rds")
-> odb_import_locations(bra0, cfg)
+> odb_import_locations(sp_to_df(bra0), cfg)
 ```

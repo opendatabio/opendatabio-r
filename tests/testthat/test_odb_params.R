@@ -4,5 +4,6 @@ test_that("odb_params function works", {
     expect_equal(odb_params(list(taxons=210)), "taxons=210")
     expect_equal(odb_params(list(taxons=210, project=T)), "taxons=210&project=1")
     expect_equal(odb_params(list(search="edulis", project=T)), "search=edulis&project=1")
+    expect_equal(odb_params(list(id=c(1,2,3), fields=c("a", "b"))), "id=1,2,3&fields=a,b")
 })
 
