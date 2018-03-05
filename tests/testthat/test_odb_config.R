@@ -1,3 +1,5 @@
+context("odb_config")
+
 test_that("odb_config with defaults", { 
     cfg = odb_config();
     expect_is(cfg, "list")

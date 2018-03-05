@@ -65,3 +65,22 @@ odb_import_locations <- function(data, odb_cfg = odb_config()) {
     return (odb_get_jobs(list(id = id), odb_cfg))
 } 
 
+#' @export 
+#' @rdname functions
+odb_get_people <- function(params = list(), odb_cfg = odb_config()) {
+    response = odb_send_get(params, odb_cfg, "persons")
+    return(fromJSON(toJSON(content(response)))$data)
+}	
+
+#' @export 
+#' @rdname functions
+odb_import_people <- function(data, odb_cfg = odb_config()) {
+    if (class(data) != "data.frame") 
+        stop ("Currently odb_import_people only accepts data.frame, please convert your data")
+    cat("Sending ODB request (filesize = " , utils::object.size(data), ")\n")
+    response = odb_send_post(data, odb_cfg, "persons")
+    id = fromJSON(toJSON(content(response)))$userjob
+    # Wait a second so that the job may start processing
+    Sys.sleep(1)
+    return (odb_get_jobs(list(id = id), odb_cfg))
+}

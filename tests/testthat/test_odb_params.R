@@ -1,3 +1,5 @@
+context("odb_params")
+
 test_that("odb_params function works", { 
     expect_equal(odb_params(), "")
     expect_equal(odb_params("string"), "string")
