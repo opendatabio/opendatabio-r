@@ -1,6 +1,5 @@
 ..Rcheck/
-references.xlsx
-references.csv
 .Rhistory
 .RData
 .*.swp
+inst/

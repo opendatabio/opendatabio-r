@@ -14,7 +14,7 @@ The functions that plot maps use libgeos, so you probably want to `apt-get insta
 
 ```R
 > library(devtools)
-> install_github("opendatabio/opendatabio-r")
+> install_github("opendatabio/opendatabio-r", build_vignettes = TRUE)
 ```
 
 ## Basic usage
@@ -43,6 +43,8 @@ for the `odb_params` function:
     5  5        Quiaceae    Family
 ```
 
+A more in-depth explanation can be found with `vignette("opendatabio-reading")`.
+
 Spatial data can be imported from http://www.gadm.org/country, download the R file format. 
 They can be then loaded and imported to the database. Other spatial data formats, such as shapefiles 
 (eg, from [Brazilian Ministry of the Environment](http://www.mma.gov.br/areas-protegidas/cadastro-nacional-de-ucs/dados-georreferenciados)) need to converted to `SpatialPolygonDataFrame`s.
@@ -54,3 +56,5 @@ They can be then loaded and imported to the database. Other spatial data formats
 > bra0 = readRDS("/path/to/BRA_adm0.rds")
 > odb_import_locations(sp_to_df(bra0), cfg)
 ```
+
+More details on the data import can be found with `vignette("opendatabio-importing")`.
