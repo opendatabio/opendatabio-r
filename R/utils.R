@@ -135,19 +135,13 @@ plot_locations = function(locations, ...) {
         stop("Locations needs to be a data.frame with a 'geom' column")
     if (! requireNamespace("rgeos", quietly = TRUE)) 
         stop("Please install rgeos: install.packages('rgeos')")
-    plot_from_wkt(locations$geom[[1]], dots)
-    if (nrow(locations) == 1) return();
-    dots[['add']] = TRUE
-    for (i in 2:nrow(locations)) {
-        try(
-            plot_from_wkt(locations$geom[[i]], dots)
-        )
-    }
-}
-# "private" plotting function
-plot_from_wkt = function(wkt, dots) {
-    to_map = rgeos::readWKT(wkt)
-    do.call(rgeos::plot, c(list(x=to_map), dots))
+    wkts = c()
+    if (! "main" %in% names(dots)) dots['main'] = "OpenDataBio locations plot"
+    if (! "axes" %in% names(dots)) dots['axes'] = TRUE
+    for(i in 1:nrow(locations))
+    	wkts = c(wkts, rgeos::readWKT(locations$geom[[i]]))
+    to_plot = do.call(rbind, c(wkts, makeUniqueIDs = TRUE))
+    do.call(rgeos::plot, c(to_plot, dots))
 }
 
 #' Converts SpatialPolygonsDataFrame data for handling
