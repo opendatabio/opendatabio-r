@@ -71,5 +71,66 @@ Sending ODB request (filesize = 1856)
 
 ## Importing taxons
 
-You can import a list of taxons using the `odb_import_taxons` function. 
+You can import a list of taxons using the `odb_import_taxons` function. Three fields are 
+currently required for a successful importation: "name", "parent" and "level". You may also
+provide "valid" to indicate whether a name is accepted or not, but if you don't, all names
+are supposed to be valid. Other fields may also be imported, check the API documentation
+for details.
 
+When receiving a list of species names, it is often necessary to clean up typographical errors,
+capitalization, and other incorrect names. The package `taxize` can help with that.
+
+```r
+> spp = c("Ficus Schultesii", "Ficus catingae", "Ficus caballina")
+> taxize::gnr_resolve(spp, canonical=TRUE, best_match_only=TRUE)[, c(1,5)]
+      user_supplied_name matched_name2   
+    1 Ficus Schultesii   Ficus schultesii
+    2 Ficus catingae     Ficus caatingae 
+    3 Ficus caballina    Ficus caballina 
+```
+
+After the species list is cleaned up, it may be transformed into a `data.table` and imported:
+```r
+> spp = c("Ficus schultesii", "Ficus caatingae", "Ficus caballina")
+> splist = data.frame(name=spp, level="species", parent_name="Ficus")
+> odb_import_taxon(splist, cfg)
+```
+
+## Importing locations
+
+Working with spatial data is a very delicate area, so we have attempted to make the workflow
+for inserting locations as easy as possible. 
+
+### Importing latitude / longitude data
+The most straightforward way to import spatial data is importing the latitude and longitude of
+a point. You must convert the data to decimal representation, with positive values for North 
+and East, and negative values for South and West. For instance, a point in Brasilia (Brazil)
+would have latitude of -15.64 and longitude of -46.87. The required fields to import locations
+are name, adm\_level and either a latitude and longitude coordinate or a full `geom` object 
+(which will be detailed later). You may specify a parent location for each object to speed up
+the process, but if you don't, it will be detected automatically. Other fields may also
+be imported, check the API documentation for more details.
+
+The administrative level of a location is a number denoting if the location is a country, state,
+or municipality, or if it is a plot or GPS point. The number corresponding to each level may
+vary depending on the country (0 is always countries, but 1 might be a state or a province),
+check http://gadm.org for details. Plots and subplots have number 100, transects have number 101
+and GPS points have number 999.
+
+To import some points to the database, you can write
+
+```r
+> lat = c(-9.9482, -7.2526, -12.3749)
+> long = c(-48.6371, -54.1272, -65.1819)
+> name = paste("GPS point", 1:3)
+> loclist = data.frame(name=name, lat=lat, long=long, adm_level = 999)
+> odb_import_locations(loclist, cfg)
+```
+
+### Importing spatial polygons
+
+TO DO...
+
+### Converting data from KMZ
+
+TO DO...

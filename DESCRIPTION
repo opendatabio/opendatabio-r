@@ -14,7 +14,8 @@ Imports:  httr,
           graphics
 Suggests: testthat,
           rgeos,
-          knitr
+          knitr,
+          taxize
 License: GPL-3 | file LICENSE
 Encoding: UTF-8
 LazyData: true
