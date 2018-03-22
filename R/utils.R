@@ -39,17 +39,29 @@ odb_send_post = function(body, odb_cfg, endpoint) {
 #'
 #' This is normally used inside the getter functions. Note that if this function
 #' receives an unnamed character string, it returns the same string. This can be used to construct more
-#' complex queries.
+#' complex queries. 
+#'
+#' The 'encode' parameter is used to encode the parameter list, replacing special symbols with their corresponding
+#' hexadecimal representation so they can be used as an URL. For instance, 'Capão da Canoa' would be encoded as
+#' 'Cap%C3%A3o%20da%20Canoa'. Note that some special symbols such as = and & have special meaning in the URL scheme,
+#' so if you call \code{odb_params} using a literal string, these will be ignored. If you need to run a query using these
+#' symbols (such as if your locality name contains a &), you will need to use the list version of this function. 
+#' See the help on \code{\link[utils]{URLencode}} for the underlying encoding function.
 #' 
 #' @return character
 #' @param params named list or character string.
+#' @param encode logical. Should the strings be encoded to URL scheme?
 #' @examples
 #' odb_params(list(level=210, valid=TRUE))
 #' odb_params("search=edulis")
 #' @export
-odb_params <- function(params = list()) {
+odb_params <- function(params = list(), encode = TRUE) {
     if (class(params) == "character" && length(names(params)) == 0) {
-        return(params)
+        if (encode) {
+            return(utils::URLencode(params, reserved = FALSE))
+        } else {
+            return(params)
+        }
     }
     if (! is.list(params)) {
         stop("odb_params expects either a list or an unnamed character string")
@@ -59,9 +71,14 @@ odb_params <- function(params = list()) {
     if (length(logic))
         params[logic] = as.numeric(params[logic])
     # we glue together params passed as vectors
-    if(length(params))
+    if(length(params) > 0)
         for (i in 1:length(params))
             params[[i]] = paste(params[[i]], collapse=",")
+    # Here, we encode them to URL scheme
+    if (encode & length(params) > 0) {
+        for (i in 1:length(params))
+            params[[i]] = utils::URLencode(as.character(params[[i]]), reserved = TRUE)
+    }
     # and "connect" them to their names
     params = paste(names(params),params,sep="=")
     # finally, we paste together all the values

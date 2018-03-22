@@ -4,10 +4,12 @@
 \alias{odb_params}
 \title{Convert query parameters}
 \usage{
-odb_params(params = list())
+odb_params(params = list(), encode = TRUE)
 }
 \arguments{
 \item{params}{named list or character string.}
+
+\item{encode}{logical. Should the strings be encoded to URL scheme?}
 }
 \value{
 character
@@ -19,6 +21,13 @@ A convenience helper to transform R named lists to HTML syntax.
 This is normally used inside the getter functions. Note that if this function
 receives an unnamed character string, it returns the same string. This can be used to construct more
 complex queries.
+
+The 'encode' parameter is used to encode the parameter list, replacing special symbols with their corresponding
+hexadecimal representation so they can be used as an URL. For instance, 'Capão da Canoa' would be encoded as
+'Cap%C3%A3o%20da%20Canoa'. Note that some special symbols such as = and & have special meaning in the URL scheme,
+so if you call \code{odb_params} using a literal string, these will be ignored. If you need to run a query using these
+symbols (such as if your locality name contains a &), you will need to use the list version of this function. 
+See the help on \code{\link[utils]{URLencode}} for the underlying encoding function.
 }
 \examples{
 odb_params(list(level=210, valid=TRUE))
