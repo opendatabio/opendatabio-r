@@ -40,3 +40,10 @@ test_that("odb_get_people works with defaults", {
     expect_is(tx, "data.frame")
     expect_equal(nrow(tx), 10)
 })
+
+test_that("simplify argument works", {
+    not.simp = odb_get_taxons(list(limit=10), simplify = FALSE)
+    expect_equal(class(not.simp$fullname), "list")
+    simp = odb_get_taxons(list(limit=10), simplify = TRUE)
+    expect_equal(class(not.simp$fullname), "character")
+})

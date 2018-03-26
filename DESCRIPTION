@@ -1,6 +1,6 @@
 Package: opendatabio
 Title: Imports and Exports Data From an OpenDataBio Server
-Version: 0.1.6
+Version: 0.2.0
 Authors@R: c(
     person("Andre", "Chalom", email = "andrechalom@gmail.com", role = c("aut", "cre")),
     person("Alberto", "Vicentini", email = "vicentini.beto@gmail.com", role = c("aut")),

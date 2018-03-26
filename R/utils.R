@@ -212,3 +212,25 @@ sp_to_df = function(data, name_arg = NA, adm_level_arg = NA) {
         adm_level = adm_level_arg
     return (data.frame(name = name, adm_level = adm_level, parent = parent, datum=datum, geom=geom))
 }
+
+##### Functions for formatting GET objects as data.frames
+safe_unlist = function(column, nrow) {
+    # Replaces "named list()" with NA as values
+    column = lapply(column, function (x) {
+                        if(length(x)==0) 
+                            return(NA)
+                        return (x)
+                    })
+    ret = unlist(column)
+    # Replaces "data.frame with 0 columns"
+    if (is.null(ret))
+        return (rep(NA, nrow))
+    return (ret)
+}
+
+format_get_response = function(response, simplify) {
+    data = fromJSON(toJSON(content(response)))$data
+    if (simplify)
+        data = lapply(data, safe_unlist, nrow(data))
+    return(data)
+}
