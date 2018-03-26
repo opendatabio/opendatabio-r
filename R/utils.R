@@ -9,7 +9,8 @@ odb_send_get = function(params, odb_cfg, endpoint) {
     url = gsub("([^:])//", "\\1/", url)
     response = stop_for_status(httr::GET(url,
                                        odb_cfg$headers
-                                       ))
+                                       ),
+                               "send request.\n  Check a full list of error codes in\n  https://github.com/opendatabio/opendatabio/wiki/API#possible-errors")
     # Usually Accept is application/json, but this may be overriden using odb_config
     if(! grepl(http_type(response), odb_cfg$headers$headers["Accept"], ignore.case=TRUE))
         stop("Wrong answer type from server: ", http_type(response))
@@ -231,6 +232,6 @@ safe_unlist = function(column, nrow) {
 format_get_response = function(response, simplify) {
     data = fromJSON(toJSON(content(response)))$data
     if (simplify)
-        data = lapply(data, safe_unlist, nrow(data))
+        data = as.data.frame(lapply(data, safe_unlist, nrow(data)), stringsAsFactors = FALSE)
     return(data)
 }

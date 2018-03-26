@@ -8,6 +8,13 @@ test_that("odb_send_get with defaults", {
     expect_equal(status_code(ret), 200)
 })
 
+test_that("errors display a helpful message", {
+    cfg = odb_config("http://httpbin.org", , NULL, c(Accept="text/html"));
+    expect_error(
+        odb_send_get(list(), cfg, "status/404"),
+        "Check a full list of error codes")
+})
+
 test_that("odb_send_get checks http_type", { 
     cfg = odb_config("http://httpbin.org", , NULL, c(Accept="application/json; text/html; */*"));
     ret = odb_send_get(list(), cfg, "headers")
@@ -45,5 +52,6 @@ test_that("simplify argument works", {
     not.simp = odb_get_taxons(list(limit=10), simplify = FALSE)
     expect_equal(class(not.simp$fullname), "list")
     simp = odb_get_taxons(list(limit=10), simplify = TRUE)
-    expect_equal(class(not.simp$fullname), "character")
+    expect_equal(class(simp$fullname), "character")
 })
+
