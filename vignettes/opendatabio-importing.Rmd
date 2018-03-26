@@ -134,3 +134,28 @@ TO DO...
 ### Converting data from KMZ
 
 TO DO...
+
+## Importing plants
+
+To import data for marked plants, you must provide a location and tag for each, along with a project
+name or id, and the date in which the plant was marked. Other recomended fields 
+include the taxonomic identification and the person or people responsible for marking the plant.
+
+The project, taxon and location must be already defined before you import plant data. The taxon and
+location may be imported using the API, but the project must be defined using the web interface.
+
+### Working with dates and incomplete dates
+The date format used in OpenDataBio is year - month - day, so a valid entry would be '2018-05-28'. 
+In many older collections, the exact day (or month) is not known, so you can substitute this fields with
+NA: '1979-05-NA' means "an unknown day, in May 1979", and '1979-NA-NA' means "unknown day and month, 1979".
+
+To import some plants, you can write
+
+```r
+> location = c("GPS point 2", "GPS point 1")
+> tag = c("001","002")
+> date = c("2017-08-09", "2017-05-NA")
+> taxon = c("Abarema acreana", "Aciotis olivieriana")
+> plantlist = data.frame(location=location, tag=tag, date=date, taxon=taxon, project="Rare species of the Para region")
+> odb_import_plants(plantlist, cfg)
+```
