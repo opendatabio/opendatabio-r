@@ -235,3 +235,42 @@ format_get_response = function(response, simplify) {
         data = as.data.frame(lapply(data, safe_unlist, nrow(data)), stringsAsFactors = FALSE)
     return(data)
 }
+
+#' Wait for a running job
+#' 
+#' This function sleeps until a job finishes. It can be used to "queue" 
+#' jobs on the user side.
+#' @param job Either a number representing a job id, or the response from a odb_import_* call
+#' @param verbose logical. Should this function print job progress to screen?
+#' @param interval numeric, time in seconds between prints
+#' @inheritParams odb_get_taxons
+#' @return data.frame, the final job object is silently returned to the user
+#' @examples
+#'\dontrun{
+#'  wait_for_job(odb_import_locations(data, cfg), cfg)
+#'}
+#' @export
+wait_for_job = function(job, odb_cfg = odb_config(), verbose = TRUE, interval = 10) {
+    fields = c("id", "created_at", "updated_at", "status", "percentage")
+    if (class(job) == "numeric" && length(job) == 1)
+        job = odb_get_jobs(list(id=job, fields=fields), odb_cfg)
+    if (!is.data.frame(job) || nrow(job) > 1)
+        stop("job parameter must be a single number or a single job object")
+    while (job$status %in% c("Submitted", "Processing")) {
+        if (verbose) {
+            cat("Job id", job$id, "status", job$status, "progress", job$percentage, "ETA", get_eta(job), "\n")
+        }
+        Sys.sleep(interval)
+        job = odb_get_jobs(list(id=job$id, fields=fields), odb_cfg)
+    }
+    cat("Job id", job$id, "finished as", job$status, "\n")
+    invisible(job) 
+}
+
+get_eta = function(job) {
+    progress = as.numeric(gsub("[-%]","", job$percentage))
+    if (is.na(progress)) return(NA)
+    created = strptime(job$created_at, format='%Y-%m-%d %H:%M:%S')
+    updated = strptime(job$updated_at, format='%Y-%m-%d %H:%M:%S')
+    return (as.character(created + 100 / progress * (updated - created)))
+}
