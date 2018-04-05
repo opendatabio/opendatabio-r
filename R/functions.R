@@ -37,7 +37,10 @@ odb_import_taxons <- function(data, odb_cfg = odb_config()) {
 #' @rdname functions
 odb_test <- function(odb_cfg = odb_config()) {
     response = odb_send_get(list(), odb_cfg, "/")
-    return (fromJSON(toJSON(content(response)))$data)
+    inner_response = fromJSON(toJSON(content(response)))
+    cat("Host:", inner_response$meta$full_url, "\n")
+    cat("Versions: server", inner_response$meta$odb_version, "api", inner_response$meta$api_version, "\n")
+    return (inner_response$data)
 }
 
 #' @export

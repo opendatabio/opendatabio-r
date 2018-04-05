@@ -36,9 +36,35 @@ your user was correctly identified:
 
 ```r
 > odb_test(cfg)
+Host: http://opendatabio.ib.usp.br/opendatabio/api/v0
+Versions: server 0.7.5 api v0
 $message
 [1] "Success!"
 
 $user
 [1] "admin@example.org"
 ```
+
+As an alternative, you can specify these parameters as systems variables. Before starting R, 
+set this up on your shell (or add this to the end of your .bashrc file):
+
+```sh
+export ODB_TOKEN="YourToken"
+export ODB_BASE_URL="http://opendatabio.ib.usp.br/opendatabio/api"
+export ODB_API_VERSION="v0"
+```
+
+After doing that, start R and load the package. The values you set up will be used by default
+in all package functions:
+
+```r
+> odb_test()
+Host: http://opendatabio.ib.usp.br/opendatabio/api/v0
+Versions: server 0.7.5 api v0
+$message
+[1] "Success!"
+
+$user
+[1] "admin@example.org"
+```
+

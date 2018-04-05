@@ -33,14 +33,14 @@ for the `odb_params` function:
 ```R
 > library(opendatabio)
 > cfg = odb_config(token="YourToken")
-> taxons = odb_get_taxons(list(valid = TRUE, fields = c("id","fullname","levelName"), limit=5), cfg)
+> taxons = odb_get_taxons(list(valid = TRUE, fields = c("id","fullname","levelName"), level=120, limit=5))
 > print(taxons)
-      id        fullname levelName
-    1  1   Excepturiceae    Family
-    2  2 Perferendisceae    Family
-    3  3  Cupiditateceae    Family
-    4  4     Aliquamceae    Family
-    5  5        Quiaceae    Family
+   id        fullname levelName
+1 144   Lycopodiaceae    Family
+2 145 Selaginellaceae    Family
+3 146      Isoetaceae    Family
+4 160     Psilotaceae    Family
+5 161    Equisetaceae    Family
 ```
 
 A more in-depth explanation can be found with `vignette("opendatabio-reading")`.
@@ -58,3 +58,8 @@ They can be then loaded and imported to the database. Other spatial data formats
 ```
 
 More details on the data import can be found with `vignette("opendatabio-importing")`.
+
+# Note to package developers!
+
+Note that running `devtools::check()` or `devtools::test()` will overwrite your
+environment variables!

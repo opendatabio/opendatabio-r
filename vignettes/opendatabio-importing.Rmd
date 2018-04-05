@@ -17,30 +17,12 @@ imports.
 # Setting up the connection
 
 The first thing to do when starting the data import is to correctly set up the connection to
-the OpenDataBio server using the `odb_config()` function. The most important parameters for
-this function are `base_url`, which should point to the API url for your OpenDataBio server, and
-`token`, which is the access token used to authenticate your user (you can find it in the 
-"Token" menu item, when using the web interface). For data imports, all requests must have
-an authorization token.
+the OpenDataBio server using the `odb_config()` function or using the shell environment configuration. 
+See the "opendatabio-reading" vignette for details on how to use it.
 
 ```r
 > cfg = odb_config(base_url = "http://opendatabio.ib.usp.br/opendatabio/api",
 + token="YourToken")
-```
-
-More advanced configuration involves setting a specific API version, a custom User Agent, or
-other HTTP headers, but this is not covered in this vignette.
-
-The function `odb_test()` may be used to check if the connection was successful, and whether
-your user was correctly identified:
-
-```r
-> odb_test(cfg)
-$message
-[1] "Success!"
-
-$user
-[1] "admin@example.org"
 ```
 
 # OpenDataBio import functions

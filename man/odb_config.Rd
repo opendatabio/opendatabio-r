@@ -23,6 +23,10 @@ list
 \description{
 Use this function to generate a base configuration for all the other functions.
 }
+\details{
+You can set the environment variables ODB_BASE_URL, ODB_TOKEN and ODB_API_VERSION to avoid typing these at each script. Please note that
+if you need to use the \code{odb_config} function explicitly if you need more flexibility.
+}
 \examples{
 cfg = odb_config(
    base_url = "http://localhost/opendatabio/api", 

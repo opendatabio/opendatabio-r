@@ -89,6 +89,9 @@ odb_params <- function(params = list(), encode = TRUE) {
 #' Generate the connection configuration
 #' 
 #' Use this function to generate a base configuration for all the other functions. 
+#'
+#' You can set the environment variables ODB_BASE_URL, ODB_TOKEN and ODB_API_VERSION to avoid typing these at each script. Please note that
+#' if you need to use the \code{odb_config} function explicitly if you need more flexibility.
 #' 
 #' @return list
 #' @param base_url character. The base URL for the API calls. It should start with the protocol ("http") 
@@ -109,20 +112,37 @@ odb_config <- function(base_url, token, api_version, ...) {
     cfg = list()
 
     if (missing(base_url)) {
-        cfg$base_url = "http://opendatabio.ib.usp.br/opendatabio/api"
+        if (Sys.getenv("ODB_BASE_URL") != "") {
+            cfg$base_url = Sys.getenv("ODB_BASE_URL")
+        } else { 
+            cfg$base_url = "http://opendatabio.ib.usp.br/opendatabio/api"
+        }
     } else {
         cfg$base_url = base_url
     }
-    if (missing (api_version))
-        api_version = "v0"
+
+    if (missing (api_version)) {
+        if (Sys.getenv("ODB_API_VERSION") != "") {
+            api_version = Sys.getenv("ODB_API_VERSION")
+        } else {
+            api_version = "v0"
+        }
+    }
     if (! is.null(api_version))
         cfg$base_url = paste(cfg$base_url, api_version, sep="/")
 
     headers = c(accept("application/json"), 
                 content_type("application/json"),
                 user_agent(default_ua()))
-    if (! missing(token))
+
+    if (missing(token)) {
+        if (Sys.getenv("ODB_TOKEN") != "") {
+            headers = c(headers, add_headers(Authorization=Sys.getenv("ODB_TOKEN")))
+        } # else... no default token!
+    } else {
         headers = c(headers, add_headers(Authorization=token))
+    }
+
     if (length(list(...)) != 0)
         headers = c(headers, add_headers(...))
     cfg$headers = headers
@@ -273,4 +293,8 @@ get_eta = function(job) {
     created = strptime(job$created_at, format='%Y-%m-%d %H:%M:%S')
     updated = strptime(job$updated_at, format='%Y-%m-%d %H:%M:%S')
     return (as.character(created + 100 / progress * (updated - created)))
+}
+
+internal_clear_env = function() {
+    Sys.setenv(ODB_TOKEN="", ODB_BASE_URL = "", ODB_API_VERSION = "")
 }
