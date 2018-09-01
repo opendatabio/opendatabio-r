@@ -18,11 +18,14 @@ odb_send_get = function(params, odb_cfg, endpoint) {
 }
 
 # Base workhorse for POST methods
-odb_send_post = function(body, odb_cfg, endpoint) {
+odb_send_post = function(data, odb_cfg, endpoint, common) {
     url = paste0(odb_cfg$base_url, "/", endpoint)
     # Removes double slashes (probably due to "pasting" urls already with /)
     # Do NOT remove the double slashes after http:
     url = gsub("([^:])//", "\\1/", url)
+
+    # Combines the "body" data.frame with the common fields passed
+    body = list(data = data, header = common)
     response = stop_for_status(httr::POST(url,
                                        odb_cfg$headers,
                                        body = body,

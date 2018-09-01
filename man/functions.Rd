@@ -17,7 +17,7 @@
 \usage{
 odb_get_taxons(params = list(), odb_cfg = odb_config(), simplify = TRUE)
 
-odb_import_taxons(data, odb_cfg = odb_config())
+odb_import_taxons(data, odb_cfg = odb_config(), common = list())
 
 odb_test(odb_cfg = odb_config())
 
@@ -30,15 +30,15 @@ odb_get_affected_ids(job_id, odb_cfg = odb_config())
 odb_get_locations(params = list(), odb_cfg = odb_config(),
   simplify = TRUE)
 
-odb_import_locations(data, odb_cfg = odb_config())
+odb_import_locations(data, odb_cfg = odb_config(), common = list())
 
 odb_get_people(params = list(), odb_cfg = odb_config(), simplify = TRUE)
 
-odb_import_people(data, odb_cfg = odb_config())
+odb_import_people(data, odb_cfg = odb_config(), common = list())
 
 odb_get_plants(params = list(), odb_cfg = odb_config(), simplify = TRUE)
 
-odb_import_plants(data, odb_cfg = odb_config())
+odb_import_plants(data, odb_cfg = odb_config(), common = list())
 }
 \arguments{
 \item{params}{named list, named vector or character string. Represents the parameters to be sent for the server, such as "valid=TRUE" to return only valid taxons. See \code{\link{odb_params}}}
@@ -48,6 +48,8 @@ odb_import_plants(data, odb_cfg = odb_config())
 \item{simplify}{logical. Should the results be 'unlisted' before being returned?}
 
 \item{data}{The data to be imported. The format is quite flexible, but normally a named \code{data.frame} is the best choice.}
+
+\item{common}{Optional. A named list containing fields which are common to all imported data.}
 
 \item{job_id}{numeric. A single job id}
 }
@@ -65,4 +67,12 @@ odb_test()
 param = list(level=210, valid=TRUE, limit=5)
 taxons = odb_get_taxons(param, cfg)
 print(taxons)
+\dontrun{
+data = data.frame( 
+  name = c("Euterpe oleracea", "Euterpe edulis"), 
+  parent = "Euterpe"
+)
+common = list(level = "species")
+odb_import_taxons(data, cfg, common)
+}
 }
