@@ -13,6 +13,7 @@
 \alias{odb_import_people}
 \alias{odb_get_plants}
 \alias{odb_import_plants}
+\alias{odb_import_measurements}
 \title{Base functions}
 \usage{
 odb_get_taxons(params = list(), odb_cfg = odb_config(), simplify = TRUE)
@@ -39,6 +40,8 @@ odb_import_people(data, odb_cfg = odb_config(), common = list())
 odb_get_plants(params = list(), odb_cfg = odb_config(), simplify = TRUE)
 
 odb_import_plants(data, odb_cfg = odb_config(), common = list())
+
+odb_import_measurements(data, odb_cfg = odb_config(), common = list())
 }
 \arguments{
 \item{params}{named list, named vector or character string. Represents the parameters to be sent for the server, such as "valid=TRUE" to return only valid taxons. See \code{\link{odb_params}}}

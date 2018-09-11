@@ -134,3 +134,13 @@ odb_import_plants <- function(data, odb_cfg = odb_config(), common = list()) {
     Sys.sleep(1)
     return (odb_get_jobs(list(id = id), odb_cfg))
 }
+
+#' @export
+#' @rdname functions
+odb_import_measurements <- function(data, odb_cfg = odb_config(), common = list()) {
+    response = odb_send_post(data, odb_cfg, "measurements", common)
+    id = fromJSON(toJSON(content(response)))$userjob
+    # Wait a second so that the job may start processing
+    Sys.sleep(1)
+    return (odb_get_jobs(list(id = id), odb_cfg))
+}
