@@ -60,7 +60,7 @@ odb_import_measurements(data, odb_cfg = odb_config(), common = list())
 odb_get methods usually return a \code{data.frame}, but that depends on the JSON response received from the server.
 }
 \description{
-These are some basic getter functions to interact with the API
+These are some basic getter functions to interact with the API. See the full help on the package vignettes.
 }
 \examples{
 cfg = odb_config()

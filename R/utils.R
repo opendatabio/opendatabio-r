@@ -275,7 +275,7 @@ format_get_response = function(response, simplify) {
 #' @export
 wait_for_job = function(job, odb_cfg = odb_config(), verbose = TRUE, interval = 10) {
     fields = c("id", "created_at", "updated_at", "status", "percentage")
-    if (class(job) == "numeric" && length(job) == 1)
+    if (is.numeric(job) && length(job) == 1)
         job = odb_get_jobs(list(id=job, fields=fields), odb_cfg)
     if (!is.data.frame(job) || nrow(job) > 1)
         stop("job parameter must be a single number or a single job object")

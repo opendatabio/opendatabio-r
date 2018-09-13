@@ -1,6 +1,6 @@
 #' Base functions
 #'
-#' These are some basic getter functions to interact with the API
+#' These are some basic getter functions to interact with the API. See the full help on the package vignettes.
 #' @examples
 #' cfg = odb_config()
 #' # Test request
