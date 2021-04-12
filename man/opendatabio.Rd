@@ -5,5 +5,5 @@
 \alias{opendatabio}
 \title{OpenDataBio: Imports and Exports Data From an OpenDataBio Server}
 \description{
-This package provides functions for downloading and uploading data from an OpendataBio repository.
+This package provides functions for using OpenDataBio APIs for downloading and uploading data to a OpendataBio repository.
 }

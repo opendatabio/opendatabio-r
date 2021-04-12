@@ -22,7 +22,8 @@ odb_detModifiers()
 data.frame or vector depending on function
 }
 \description{
-Functions to retrieve codes and ids required to import data. Taxon levels, Trait types, Nomenclatural Types
+Functions to retrieve codes and ids required to import data. 
+Taxon levels, Trait types, Nomenclatural Types
 }
 \examples{
 odb_taxonLevelCodes()

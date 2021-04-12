@@ -42,6 +42,20 @@ odb_get_affected_ids <- function(job_id, odb_cfg = odb_config()) {
 
 #' @export 
 #' @rdname import_functions
+odb_import_individuals <- function(data, odb_cfg = odb_config(), common = list()) {
+ if (class(data) != "data.frame") 
+  stop ("Currently odb_import_plants only accepts data.frame, please convert your data")
+ cat("Sending ODB request (filesize = " , utils::object.size(data), ")\n", sep="")
+ response = odb_send_post(data, odb_cfg, "plants", common)
+ id = fromJSON(toJSON(content(response)))$userjob
+ # Wait a second so that the job may start processing
+ Sys.sleep(1)
+ return (odb_get_jobs(list(id = id), odb_cfg))
+}
+
+
+#' @export 
+#' @rdname import_functions
 odb_import_locations <- function(data, odb_cfg = odb_config(), common = list()) {
  if (class(data) != "data.frame") 
   stop ("Currently odb_import_taxons only accepts data.frame, please convert your data")
@@ -53,9 +67,20 @@ odb_import_locations <- function(data, odb_cfg = odb_config(), common = list()) 
  return (odb_get_jobs(list(id = id), odb_cfg))
 } 
 
+#' @export
+#' @rdname import_functions
+odb_import_measurements <- function(data, odb_cfg = odb_config(), common = list()) {
+ response = odb_send_post(data, odb_cfg, "measurements", common)
+ id = fromJSON(toJSON(content(response)))$userjob
+ # Wait a second so that the job may start processing
+ Sys.sleep(1)
+ return (odb_get_jobs(list(id = id), odb_cfg))
+}
+
+
 #' @export 
 #' @rdname import_functions
-odb_import_people <- function(data, odb_cfg = odb_config(), common = list()) {
+odb_import_persons <- function(data, odb_cfg = odb_config(), common = list()) {
  if (class(data) != "data.frame") 
   stop ("Currently odb_import_people only accepts data.frame, please convert your data")
  cat("Sending ODB request (filesize = " , utils::object.size(data), ")\n", sep="")
@@ -67,18 +92,6 @@ odb_import_people <- function(data, odb_cfg = odb_config(), common = list()) {
 }
 
 
-#' @export 
-#' @rdname import_functions
-odb_import_plants <- function(data, odb_cfg = odb_config(), common = list()) {
- if (class(data) != "data.frame") 
-  stop ("Currently odb_import_plants only accepts data.frame, please convert your data")
- cat("Sending ODB request (filesize = " , utils::object.size(data), ")\n", sep="")
- response = odb_send_post(data, odb_cfg, "plants", common)
- id = fromJSON(toJSON(content(response)))$userjob
- # Wait a second so that the job may start processing
- Sys.sleep(1)
- return (odb_get_jobs(list(id = id), odb_cfg))
-}
 
 #' @export 
 #' @rdname import_functions
@@ -105,23 +118,10 @@ odb_import_traits <- function (data, odb_cfg = odb_config(), common = list())
 odb_import_vouchers <- function (data, odb_cfg = odb_config(), common = list()) 
 {
  if (class(data) != "data.frame") 
-  stop("Currently odb_import_specimen only accepts data.frame, please convert your data")
+  stop("Currently odb_import_vouchers only accepts data.frame, please convert your data")
  cat("Sending ODB request (filesize = ", utils::object.size(data), ")\n", sep = "")
  response = odb_send_post(data, odb_cfg, "samples", common)
  id = fromJSON(toJSON(content(response)))$userjob
  Sys.sleep(1)
  return(odb_get_jobs(list(id = id), odb_cfg))
 }
-
-
-#' @export
-#' @rdname import_functions
-odb_import_measurements <- function(data, odb_cfg = odb_config(), common = list()) {
- response = odb_send_post(data, odb_cfg, "measurements", common)
- id = fromJSON(toJSON(content(response)))$userjob
- # Wait a second so that the job may start processing
- Sys.sleep(1)
- return (odb_get_jobs(list(id = id), odb_cfg))
-}
-
-

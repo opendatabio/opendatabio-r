@@ -1,6 +1,7 @@
 #' OpenDataBio Import Helpers
 #'
-#' Functions to retrieve codes and ids required to import data. Taxon levels, Trait types, Nomenclatural Types
+#' Functions to retrieve codes and ids required to import data. 
+#' Taxon levels, Trait types, Nomenclatural Types
 #' 
 #' @return data.frame or vector depending on function
 #' @param level character. Taxon string level, 'species', 'fam.'. Default 'all'
