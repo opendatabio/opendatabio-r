@@ -61,6 +61,7 @@ These are some basic functions to interact with the API and download data.
 See the full help on the package vignettes.
 }
 \examples{
+\dontrun{
 cfg = odb_config()
 # Test request
 odb_test()
@@ -68,4 +69,5 @@ odb_test()
 param = list(level=210, valid=TRUE, limit=5)
 taxons = odb_get_taxons(param, cfg)
 print(taxons)
+}
 }

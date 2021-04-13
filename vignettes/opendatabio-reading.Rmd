@@ -1,5 +1,5 @@
 ---
-title: "opendatabio:reading"
+title: "Reading data using the OpenDataBio R client"
 author: "A. Chalom"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -8,13 +8,13 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-# Reading data using the OpenDataBio R client
+## Reading data using the OpenDataBio R client
 
 The `opendatabio` R package was created to allow data from an OpenDataBio server to be read, 
 and to allow data to be easily imported to an OpenDataBio server. This vignette focus on 
 extracting and manipulating data from an OpenDataBio server.
 
-# Setting up the connection
+## Setting up the connection
 
 The first thing to do when starting the data import is to correctly set up the connection to
 the OpenDataBio server using the `odb_config()` function. The most important parameters for

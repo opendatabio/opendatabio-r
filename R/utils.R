@@ -104,11 +104,13 @@ odb_params <- function(params = list(), encode = TRUE) {
 #' @param api_version character. Use this to specify the API version to connect to. You can set this to NULL to connect to the latest API, but this might break your code.
 #' @param \dots Further parameters to be passed to add_headers. 
 #' @examples
+#' \dontrun{
 #' cfg = odb_config(
 #'    base_url = "http://localhost/opendatabio/api", 
 #'    token = "ABCDEF", 
 #'    api_version = "v0"
 #' )
+#' }
 #' @export
 #' @import httr
 odb_config <- function(base_url, token, api_version, ...) {
@@ -118,7 +120,7 @@ odb_config <- function(base_url, token, api_version, ...) {
         if (Sys.getenv("ODB_BASE_URL") != "") {
             cfg$base_url = Sys.getenv("ODB_BASE_URL")
         } else { 
-            cfg$base_url = "http://opendatabio.ib.usp.br/opendatabio/api"
+            cfg$base_url = "http://localhost/opendatabio/api"
         }
     } else {
         cfg$base_url = base_url

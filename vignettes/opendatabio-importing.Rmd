@@ -1,5 +1,5 @@
 ---
-title: "opendatabio:importing"
+title: "Importing data using the OpenDataBio R client"
 author: "A. Chalom & A. Vicentini"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -41,7 +41,7 @@ odb_get_affected_ids(127, cfg)
 odb_get_log(127, cfg)
 [1] "WARNING: There is another registry of a person with name like João da Silva or abbreviation like SILVA, J."
 ```
-## Importing locations
+# Importing locations
 
 Working with spatial data is a very delicate area, so we have attempted to make the workflow for inserting locations as easy as possible.
 You should use the web interface for large uploads, which will handle better memory issues. 
@@ -55,7 +55,7 @@ Locations may be POLYGONS (POLYGON OR MULTIPOLYGON), POINTS (latitude and longit
 1. Conservation Units are treated as special case by OpenDataBio, as some UCs may span different administrative locations. So a Location may belong to a UC in addition to its parent location. Therefore, UCs (adm_level==99) my be used to store any territorial area that transcends country administrative boundaries, and so are also usefull to store Indigenous Territories;
 1. OpenDataBio stores the geometries of locations using Well-known text (WKT) representation.
 
-### Adm_level defines the hierarchy
+## Adm_level defines the hierarchy
 
 Location data are hierarchical and you should consider to seed your database with administrative polygons prior to enter POINT or PLOT locations.  The administrative level (adm_level) of a location is a number:  
 
@@ -65,9 +65,9 @@ Location data are hierarchical and you should consider to seed your database wit
 * 99 is the code for Conservation Units or Indigenous Territories;
 * 101 for transects
 
-### Importing spatial polygons
+## Importing spatial polygons
 
-#### Administrative boundaries from GADM
+### Administrative boundaries from GADM
 
 To import administrative boundaries, which are POLYGONS, you may download the needed areas from GADM and easily import them into OpenDataBio:
 
@@ -118,7 +118,7 @@ odb_import_locations(data=locations.to.odb,odb_cfg=cfg)
 
 ```
 
-#### A ShapeFile example
+### A ShapeFile example
 
 ```
 library(rgdal)
@@ -147,7 +147,7 @@ shape.to.odb$admin_level = 2
 odb_import_locations(data=shape.to.odb,odb_cfg=cfg)
 
 ```
-#### Converting data from KML
+### Converting data from KML
 
 ```
 #read file as SpatialPolygonDataFrame
@@ -170,7 +170,7 @@ odb_import_locations(data=to.odb,odb_cfg=cfg)
 
 ```
 
-### Import Plots and subplots
+## Import Plots and subplots
 
 Plots are a special case within OpenDataBio. They may have a geometry defined as any other location type, but may also have cartesian dimensions (X and Y) in meters. Subplots are plots within plot locations and may also have cartesian positions (startX, startY) within parent location in addition to dimensions. Cartesian position refer to X and Y positions within parent plot and hence MUST be smaller than parent X and Y.  And the same is true for Individuals within plots or subplots when they have their own X and Y cartesian coordinates.
 
@@ -199,7 +199,7 @@ subplot.to.odb = data.frame(name='My subplot',x=20,y=20,lat=latitude, long=longi
 odb_import_locations(data=subplot.to.odb,odb_cfg=cfg)
 ```
 
-### Importing latitude / longitude data
+## Importing latitude / longitude data
 The most straightforward way to import spatial data is importing the latitude and longitude of
 a point. You must convert the data to decimal representation, with positive values for North
 and East, and negative values for South and West. For instance, a point in Brasilia (Brazil)
@@ -217,7 +217,7 @@ name = paste("GPS point", 1:3)
 loclist = data.frame(name=name, lat=lat, long=long, adm_level = 999)
 odb_import_locations(loclist, cfg)
 ```
-## Importing persons
+# Importing persons
 
 It is recommended you use the web interface, as it will warn you in case the person you want to register has a similar, likely the same, person already registered. The API will only check for identical Abbreviations, which is the single restriction of the Person class. Abbreviations are unique and duplication are not allowed. This does not prevent data downloaded from repositories to have different abbreviations or full name for the same person. So, you should standardize secondary data before importing into the server to minimize such common errors. 
 
@@ -229,7 +229,7 @@ odb_import_persons(to.odb,odb_cfg=cfg)
 
 ```
 
-## Importing taxons
+# Importing taxons
 
 You can import a list of taxons using the `odb_import_taxons` function. For a successful importation of published names, you just need to provide a 'name' value, being the fullname for species and infraspecies categories (e.g. Licaria guianensis guianensis). You may also provide, 'level' and 'parent' to minimize assignment errors. The import process will use the "name" value to retrieve taxon info from a nomenclatural repository: Tropicos (Mobot), the International Plant Name Index (IPNI), Zoobank, Mycobank and GBIF. If found, it will automatically get the author, which is mandatory, and will detect the parent for the taxon. If the parent is not registered the importation will fail. If parent is informed and different from the one detected, then the informed parent may be used. For unpublished names, a `person` or `author_id` value must be provided.
 
@@ -239,7 +239,7 @@ Taxonomy is hierarchical and the structure within the OpenDataBio may be treelik
 
 Unpublished names for species may also be recorded, but they require an author, which is a Person in the database. 
 
-### Simple example
+## Simple example
 Check your name with taxize:
 ```
 spp = c("Ficus Schultesii", "Ficus catingae", "Ficus caballina")
@@ -257,7 +257,7 @@ odb_import_taxons(splist, cfg)
 ```
 For species and infraspecific categories parent_name must be provided, either as name or as a numeric id value that you may get with `odb_get_taxons`.
 
-### Taxon and parents from Tropicos (MOBOT)
+## Taxon and parents from Tropicos (MOBOT)
 Import a Taxon and the full parent classification, retrieving data from Tropicos. The example also uploads the mobotid, the taxon publication reference and author, when available. Not that Tropicos classification for upper taxonomic levels may be outdated from current APG system.
 
 ```
@@ -299,7 +299,7 @@ odb_import_taxons(tx.to.odb,odb_cfg=cfg)
 
 ```
 
-### An unpublished species or morphotype
+## An unpublished species or morphotype
 
 It is common to have unpublished local species names (morphotypes) for plants in plots, or yet to be published taxonomic work. Unpublished designation are project specific and therefore MUST also provide an author as different projects may use the same 'sp.1' or 'sp.A' code for their unpublished taxons. 
 
@@ -316,7 +316,7 @@ to.odb = data.frame(name='Morphotype sp.1', parent_name='Angiosperms', stringsAs
 to.odb$level=odb_taxonLevelCodes('sp.')
 
 #you must provide an author that is a Person in the Person table. Get from server
-odb.persons = odb_get_people(params=list(search='name.to.search.here'),odb_cfg=cfg)
+odb.persons = odb_get_persons(params=list(search='name.to.search.here'),odb_cfg=cfg)
 
 #found
 head(odb.persons)
@@ -328,7 +328,7 @@ to.odb$author = odb.persons$id
 odb_import_taxons(to.odb,odb_cfg = cfg)
 
 ```
-### Import a published clade
+## Import a published clade
 
 You may add a clade Taxon and may reference its publication using the `bibkey` entry. So, it is possible to actually store all relevant nodes of any phylogeny in the Taxon hierarchy.
 
@@ -358,24 +358,24 @@ to.odb = rbind(to.odb,children)
 odb_import_taxons(to.odb,odb_cfg = cfg)
 
 ```
-## Working with dates and incomplete dates
+# Working with dates and incomplete dates
 
 For individuals, vouchers and identifications you may use incomplete dates.
 
 The date format used in OpenDataBio is year - month - day, so a valid entry would be '2018-05-28'.
 In many older collections, the exact day (or month) is not known, so you can substitute this fields with NA: '1979-05-NA' means "an unknown day, in May 1979", and '1979-NA-NA' means "unknown day and month, 1979". You may not add a date for which you have only the day, but can if you have only the month if is actually meaningful in some way.
 
-## Importing Individuals 
+# Importing Individuals 
 
 Individuals can be imported  using `odb_import_individuals()`.  Individuals must have an unique identifier defined by the combination of Tag+Collector+Location, which defines the individuals fullname. 
 
-### Mandatory fields
+## Mandatory fields
 1. tag = the number for the record, may be the aluminium tag on tree or bird ring, or the `collector number` of an herbarium specimen;
-1. collectors = persons ids, abbreviations, fullnames or emails, as a string separated by ';' or '|', or list. Get ids with `odb_get_persons()`. The first person on the list is the `main collector`
+1. collectors = persons ids, abbreviations, full_names or emails, as a string separated by ';' or '|', or list. Get ids with `odb_get_persons()`. The first person on the list is the `main collector`
 1. date = complete or incomplete collecting date for the individual (see above). You may inform as separate fields: date_year, date_month, date_day, or just year,month, day;
 1. project =  the project_id or name to which the individual will be linked and which you may get with `odb_get_projects()`.
 
-### Individual location fields
+## Individual location fields
 **Mandatory**
 1. location = id, or name of registered location
 OR
@@ -389,9 +389,16 @@ OR
 1. distance = distance in meters from location (for POINT type)
 1. angle = azimuth in degrees from location (for POINT type)
 
-### Individual identification fields (optional)
+## Individual identification fields (optional)
+
+An Individual may have its own taxonomic identification (self) or may be linked to another individual that has an identification (non-self)
+
+**For non-self identifications**:
+1. identification_individual = the id or full name of the Individual having the Identification - get with `odb_get_individuals()`;
+
+**For self identifications**:
 1. taxon =  the taxon id or name - get with `odb_get_taxons()`. 
-1. identifier =  the person 'id', 'abbreviation', 'full_name', 'email' that made the identification. get with `odb_get_people()`. 
+1. identifier =  the person 'id', 'abbreviation', 'full_name', 'email' that made the identification. get with `odb_get_persons()`. 
 1. identification_date = complete or incomplete date, as string or name list (see above)
 1. modifier =  if you need a modifier, use the numerical codes from `odb_detModifiers()`. Optional. Defaults to 0, 'none'.
 1. identification_notes =  Optional, a text referring to the identification. 
@@ -400,33 +407,34 @@ OR
 
 The last two fields allow you to link your identification to a specimen in a BioCollection and may be used to retrieve updates for the identification of the individual in your database. For this to be meaningful, `identification_based_on_biocollection_id` must be a somewhat permanent code that allows you to find it in the herbarium data repository(or GBIF, SpeciesLink, etc) in the future.
 
-#### Individual vouchers (optional)
-If Individual has Vouchers you may import them along with the Individual record by adding the biocollection references below. This is valid only if Voucher has the same collector and number (tag) as that of the Individual (else import them after importing Individuals with `odb_import_vouchers()`). 
-1. biocollection = string of ids or acronyms separated by ';' or '|';
-1. biocollection_number =  string of local reference codes separated by ';' or '|', same length as 'biocollection'
-1. biocollection_type = string of numerical nomeclatural type codes separated by ';' or '|', same length as 'biocollection'. You may get the code list with `odb_nomenclaturalTypes()`
+### Individual vouchers (optional)
+If Individual has Vouchers you may import them along with the Individual record by adding the biocollection fields listed below. This is **valid only if Voucher has the same collector and number (i.e. tag) as that of the Individual** (else import them after importing Individuals with `odb_import_vouchers()`). 
+1. biocollection = string of ids or acronyms separated by ';' or '|'; 
+1. biocollection_number =  string of local biocollection repository ids separated by ';' or '|', same length as 'biocollection'
+1. biocollection_type = string of numerical nomeclatural type codes separated by ';' or '|', same length as 'biocollection'. You may get the code list with `odb_nomenclaturalTypes()`; defaults to 0, not type.
 
-You may also specify this as a list or data.frame in the biocollection column, having three columns/elements:'biocollection_code','biocollection_number','biocollection_type'.
+You may also specify these as a list or data.frame in the 'biocollection' column, having three columns/elements:'biocollection_code','biocollection_number','biocollection_type'.
 
-#### Individual example
+### Individual example
 
 ```
-basic.fields =  c("tag", "location", "tagging_team","relative_position","date")
-identification.fields = c("taxon", "identifier", "modifier", "identification_date","identification_notes", "identification_based_on_herbarium","herbarium_code")
+basic.fields =  c("tag", "location", "collector","relative_position","date")
+identification.fields = c("taxon", "identifier", "modifier", "identification_date","identification_notes", "identification_based_on_biocollection","identification_based_on_biocollection_id")
 
-#a plant tag, the number in the aluminium tag in the forest
+#register a plant in a forest plot location
+#the number in the aluminium tag in the forest
 to.odb = data.frame(tag='3405.L1', stringsAsFactors=F)
 
-#the tagging team (get ids from the server for member of the group tagging the plant)
-joao = odb_get_people(params=list(search='joao batista'),odb_cfg=cfg)$id
-ana = odb_get_people(params=list(search='ana andrade'),odb_cfg=cfg)$id
+#the collectors (get ids from the server)
+joao = odb_get_persons(params=list(search='joao batista'),odb_cfg=cfg)$id
+ana = odb_get_persons(params=list(search='ana andrade'),odb_cfg=cfg)$id
 #ids concatenated by | pipe 
 to.odb$collector = paste(joao,ana,sep='|')
 
-#tagged date (may be incomplete).
+#tagged date (lets use an incomplete).
 to.odb$date = '2018-07-NA'
 
-#location
+#lets place in a Plot location
 to.odb$location = odb_get_locations(params=list(name='Plot 2021'),odb_cfg=cfg)$id
 
 #relative position within parent 
@@ -435,21 +443,29 @@ to.odb$y = 32.5
 #or could be
 to.odb$relative_position = paste(x,y,sep=',')
 
-#taxonomic identification with incomplete identification date
-taxon = odb_get_taxons(params=list(name='Dinizia excelsa'),odb_cfg=cfg)$id
+#taxonomic identification
+  #check that exists
+  taxon = odb_get_taxons(params=list(name='Dinizia excelsa'),odb_cfg=cfg)$id
+    # OR if you are sure it exists you could just
+    taxon = 'Dinizia excelsa'
+    
+  #person that identified the individual
+  to.odb$identifier = odb_get_persons(params=list(search='paulo apostolo'),odb_cfg=cfg)$id
+  
+  #may add modifers as well [may need to use numeric code instead]
+  to.odb$modifier = 'cf.'  
+    #or check with odb_detModifiers() to see you spelling is correct 
+    #to be safe use number code
+    to.odb$modifier = 3
 
-#person that identified the plant
-to.odb$identifier = odb_get_persons(params=list(search='apostolo'),odb_cfg=cfg)$id
-
-#may add modifers as well [may need to use numeric code instead]
-to.odb$modifier = 'cf.'
-
-#an incomplete identification date
-to.odb$identification_date = list(year=2005) or just "2005-NA-NA"
+  #an incomplete identification date
+  to.odb$identification_date = list(year=2005) 
+    #or  to.odb$identification_date =  "2005-NA-NA"
 
 odb_import_individuals(to.odb,odb_cfg = cfg)
+
 ```
-#### An even simpler example
+### An even simpler example
 
 You may just use the code below, but will imply the following assumptions as identifications cannot be added without identifier nor identification_date: a) identifier will be the default Person associated with your profile; b) identification_date will be the same as date.
 
@@ -460,138 +476,166 @@ date = c("2017-08-09", "2017-05-NA")
 taxon = c("Abarema acreana", "Aciotis olivieriana")
 plantlist = data.frame(location=location, tag=tag, date=date, taxon=taxon, project="Rare species of the Para region")
 odb_import_individuals(plantlist, cfg)
+
 ```
 
-## Import Vouchers 
+# Import Vouchers 
 
-Vouchers are samples from Individuals, deposited in BioCollections. If the Biocollection is a genetic resource, the Voucher may just represent a DNA or tissue sample.
+Vouchers are samples of Individuals deposited in BioCollections. If the Biocollection is a genetic resource, the Voucher may just represent a DNA or tissue sample. 
 
-Therefore, Vouchers must belong to an Individual and to a BioCollection, which are the mandatory information to register vouchers. Collectors, collection date, location and taxonomic identity may be just extracted from the Individual's record. But a Voucher may have its own Collectors, CollectorNumber and CollectingDates, different from the Individual it belongs to. 
+Therefore, Vouchers must belong to an Individual and to a BioCollection, which are the mandatory information to register vouchers. Collectors, collection date, location and taxonomic identity are just extracted from the Individual's record. But a Voucher may have its own collector, collector number and collecting date, different from the Individual it belongs to. 
 
-### Mandatory
+## Mandatory
 1. individual = individual id or full name;
-1. biocollection = acronym or id of the BioCollection;
+1. biocollection = acronym or id of the BioCollection - use `odb_get_biocollections()` to check if register;
 
-### Optional 
+## Optional 
 1. biocollection_number = string of local reference codes separated by ';' or '|', same length as 'biocollection'
-1. biocollection_type = string of numerical nomeclatural type codes separated by ';' or '|', same length as 'biocollection'. You may get the code list with `odb_nomenclaturalTypes()`
-1. collector = list of ids, abbreviations, full_names or emails of persons, separated by ';' or '|';
-1. number = the collector-number code;
-1. date = complete or incomplete date for the Voucher collection
-1. notes = any not you wish;
+1. biocollection_type = string of numerical nomeclatural type codes separated by ';' or '|', same length as 'biocollection'. Get codes with `odb_nomenclaturalTypes()`
+1. collector = list of ids, abbreviations, full_names or emails of persons, separated by ';' or '|'; to get a list use `odb_get_persons()`; IF DIFFERENT FROM Individual's collector
+1. number = the collector-number code; IF DIFFERENT FROM Individual's  Tag
+1. date = complete or incomplete date for the Voucher collection IF DIFFERENT FROM Individual's date
+1. notes = any text you wish;
 
+# Import Traits
 
-## Import Traits
+Before importing any trait, make sure the variable is not already registered in the system with a different name. Preventing duplication is important as the Trait class is shared among all users of an OpenDataBio installation. This also means that once a trait is used for Measurements, you may only alter the trait's definition, for example, a category name, if you were the only user entering the measurements. Otherwise, somebody else used that definition and you will not be able to alter it.
 
-Before importing any trait, make sure it is not already registered in the system with a different name. Preventing duplication is important as the Trait class is shared among all users of a OpenDataBio installation. This also means that once a trait is used to include Measurements, you may only alter the trait definition, for example, a category name, if you were the user entering the measurements. Otherwise, somebody else used that definition and you will not be able to alter.(CHECK API)
+Traits have one restriction: **export_name must be unique** in a single ODB installation. This name is used as a column name when exporting data and you should consider making it as short and informative (of definition) as possible. Also, try not to add spaces or any special character (accents) in export names. We recommend you use 'camelCase' or 'PascalCase' or 'snake_case', such as 'leafLength', 'LeafLength'  or 'leaf_length'.
 
-Use the web interface to add traits, it will be easier for you to include all possible language translations. 
-
-Traits have one restriction: export_name must be unique. This name is used as a column name when exporting data and you should consider making it as short and informative (of definition) as possible and DO NOT add spaces or any special character. 
-
-### Traits entries
+## Traits entries
 
 See `odb_traitTypeCodes()` for possible trait types.
 
-#### Mandatory
-1. name - string for English or list for all languages, having the keys as the Language ids, see `odb_get_languages()` helper.
-1. description - same as name
-1. export_name - string
-1. type - a 0 to 6 numeric code . Check `odb_traitTypeCodes()`;
-1. objects - string containing to which object types the trait may be linked
+## Mandatory
+1. export_name - string (see note above)
+1. name - string for English (first language in database table), or a list for all languages, having the keys as the Language ids. Get languages from server using `odb_get_languages()`.
+1. description - like name, but for a detailed trait definition in multiple languages;
+1. type - a 0 to 8 numeric code. Check `odb_traitTypeCodes()`;
+1. objects - string containing which core-objects the trait may be used for. Possible values are 'Individual', 'Voucher', 'Location' and/or 'Taxon', singular and case sensitive.
 
-#### Optional or trait specific
+## Trait specific or optional
 1. units - required for quantitative traits only (the unit o measurement), standard to English
-1. range_min - optional for quantitative
-1. range_max - optional for quantitative
-1. cat_names - required for categorical; list of categories language translations
-1. cat_descriptions - optional but recommended for categorical; list of categories descriptions translations
+1. range_min - optional for quantitative (minimum value to be accepted)
+1. range_max - optional for quantitative (maximum value the trait may recieve)
+1. categories - required for categorical; data.frame with categories translations;
 1. bibkey - optional, bibkey to link trait definition with reference in database
+1. wavenumber_min - required for spectral traits (may be informed as range_min)
+1. wavenumber_max - required for spectral traits (may be informed as range_max)
+1. value_length - required for spectral traits = number of values in spectrum
+1. link_type- required for Link traits - the class of link type, fullname or basename: eg. 'Taxon' or 'App\Models\Taxon'.
 
-### Quantitative traits
+## Trait name and categories User translations
+Fields **name** and **description** could be one of following:
+1. using the Language code as keys: `list("en" = "Diameter at Breast Height","pt" ="Diâmetro a Altura do Peito")`
+1. or using the Language ids as keys: `list("1" = "Diameter at Breast Height","2" ="Diâmetro a Altura do Peito"}`.
+1. or using the Language names as keys: `list("English" ="Diameter at Breast Height","Portuguese" ="Diâmetro a Altura do Peito")`.
+<br><br>
+Field **categories** must include for each category+rank+lang the following fields:
+1. lang=mixed - required, the id, code or name of the language of the translation
+1. name=string - required, the translated category name required (name+rank+lang must be unique)
+1. rank=number - required, rank is important to indicate the same category across languages, and defines ordinal traits;
+1. description=string - optional for categories, a definition of the category.
+This may be formatted as a data.frame and placed in the `categories` column of another data.frame:
+```
+data.frame(
+  rbind(
+    c("lang"="en","rank"=1,"name"="small","description"="smaller than 1 cm"),
+    c("lang"="pt","rank"=1,"name"="pequeno","description"="menor que 1 cm"),
+    c("lang"="en","rank"=2,"name"="big","description"="bigger than 10 cm"),
+    c("lang"="pt","rank"=2,"name"="grande","description"="maior que 10 cm")
+  ),
+  stringsAsFactors=FALSE
+)
+```
 
+## Quantitative traits
 For quantitative traits for either _integers_ or _real_ values (types 0 or 1). 
+
 ```
 odb_traitTypeCodes()
 
 #do this first to build a correct data.frame as it will include translations list
-to.odb = data.frame(type=1,export_name = "DBH", units='centimeters',stringsAsFactors = F)
+to.odb = data.frame(type=1,export_name = "dbh", units='centimeters',stringsAsFactors = F)
 
 #add translations (note double list) 
 #format is language_id = translation (and the column be a list with the translation lists)
 to.odb$name[[1]]= list('1' = 'Diameter at breast height', '2' = 'Diâmetro à altura do peito')
-to.odb$description[[1]]= list('1' = 'Stem diameter measured at 1.3m height, unless otherwise specified','2' = 'Diâmetro do tronco medido à 1.3m de altura, exceto quando especificado diferentemente em DBHPom')
-
+to.odb$description[[1]]= list('1' = 'Stem diameter measured at 1.3m height','2' = 'Diâmetro do tronco medido à 1.3m de altura')
 
 #measurement validations
 to.odb$range_min = 10  #this will restrict the minimum measurement value allowed in the trait
 to.odb$range_max = 400 #this will restrict the maximum value
 
 #measurements can be linked to (classes concatenated by , or a list)
-to.odb$object = "Plants,Voucher,Taxon"  #makes no sense link such measurements to Locations
+to.odb$object = "Individual,Voucher,Taxon"  #makes no sense link such measurements to Locations
 
 to.odb$notes = 'a fake note'
 
 #import
-odb_import_taxons(to.odb,odb_cfg=cfg)
+odb_import_traits(to.odb,odb_cfg=cfg)
 
 ```
 
-### Categorical or ordinal traits
+## Categorical or ordinal traits
 
-Must include categories. The only difference between ordinal and categorical traits is that ordinal categories will have a rank and the rank will be inferred from the order the categories are informed during importation. Note that ordinal traits are semiquantitative and so, if you have categories ask yourself whether they are not really ordinal and register accordingly.
+Must include categories. The only difference between ordinal and categorical traits is that ordinal categories will have a rank and the rank will be inferred from the order the categories are informed during importation. Note that ordinal traits are semi-quantitative and so, if you have categories ask yourself whether they are not really ordinal and register accordingly.
 
 Like the Trait name and description, categories may also have different language translations, and you SHOULD enter the translations for the languages available (`odb_get_languages()`) in the server, so the Trait will be accessible in all languages. English is mandatory, so at least the English name must be informed. Categories may have a description associated, but sometimes the category name is self explanatory, so descriptions of categories are not mandatory.
 
-#### Multiselection categories
+### Multiselection categories
 ```
 odb_traitTypeCodes()
 
 #do this first to build a correct data.frame as it will include translations list
-to.odb = data.frame(type=3,export_name = "SpecimenFertility", stringsAsFactors = F)
+to.odb = data.frame(type=3,export_name = "specimenFertility", stringsAsFactors = F)
 
 #trait name and description
 to.odb$name =  data.frame("1"="Specimen Fertility","2"="Fertilidade do especímene",stringsAsFactors=F)
 to.odb$description =  data.frame("1"="Kind of reproductive stage of a collected plant","2"="Estágio reprodutivo de uma amostra de planta coletada",stringsAsFactors=F)
 
 #categories (if your trait is ORDINAL, the add categories in the wanted order here)
-cat1 = c("Sterile","Estéril")
-cat2 = c("Flowers","Flores")
-cat1 = c("Sterile","Estéril")
-cat2 = c("Flowers","Flores")
-cat3 = c("Fruits","Fruitos")
-cat4 = c("Flower buds","Botões florais")
-cat5 = c("Immature fruits","Frutos imaturos")
-categories = as.data.frame(rbind(cat1,cat2,cat3,cat4,cat5),stringsAsFactors=F)
-colnames(categories) = c("1","2")
-to.odb$cat_names = categories
+categories = data.frame(
+  rbind(
+    c('eng',1,"Sterile"),
+    c('pt',1,"Estéril"),
+    c('eng',2,"Flowers"),
+    c('pt',2,"Flores"),
+    c('eng',3,"Fruits"),
+    c('pt',3,"Frutos"),
+    c('eng',4,"Flower buds"),
+    c('pt',4,"Botões florais")
+  ),
+  stringsAsFactors =FALSE
+)
+colnames(categories) = c("lang","rank","name")
 
-#descriptions not included for categories as they are obvious, but you may add in the same way as names
+#descriptions not included for categories as they are obvious, 
+# but you may add a 'description' column to the categories data.frame
 
-#measurements can be linked to (classes concatenated by , or a list)
-to.odb$object = "Plants,Voucher"  #makes no sense link such measurements to Locations or Taxon
+#objects for which the trait may be used for
+to.odb$object = "Individual,Voucher"  
 
 to.odb$notes = 'a fake note'
 
 #import
-odb_import_taxons(to.odb,odb_cfg=cfg)
+odb_import_traits(to.odb,odb_cfg=cfg)
 ```
 
-### Link type traits
+## Link type traits
 
-Not included in the API. Use the web interface to register such trait.
+Link types are traits that allow you link an Individual, Taxon or Voucher as a value measurement to another object. For example, you may conduct a plant inventory for which you have only counts for Taxon associated to a locality. Therefore, you may create a LINK trait, which will allow you to store the count values for any Taxon as measurements for a particular location (POINT, POLYGON). Or you may link such values to Vouchers instead of Taxons if you have a representative specimen for the taxons.
 
-Link types are traits that allow you link a Plant, Taxon or Voucher as a value measurement to another object. For example, you may conduct a plant inventory for which you have only counts for Taxon associated to a locality. Therefore, you may create a LINK trait, which will allow you to store the count values for any Taxon as measurements for a particular location (POINT, POLYGON). Or you may link such values to Vouchers instead of Taxons if you have a representative specimen for the taxons.
+Use the WebInterface.
 
-
-### Text and color traits
+## Text and color traits
 
 Text and color traits require the minimum fields only for trait registration. Text traits allow the storage of textual observations. Color will only allow color codes (see under Measurements)
 
 ```
 odb_traitTypeCodes()
 
-to.odb = data.frame(type=5,export_name = "TaxonDescription", stringsAsFactors = F)
+to.odb = data.frame(type=5,export_name = "taxonDescription", stringsAsFactors = F)
 
 #trait name and description
 to.odb$name =  data.frame("1"="Taxonomic descriptions","2"="Descrições taxonômicas",stringsAsFactors=F)
@@ -601,32 +645,29 @@ to.odb$description =  data.frame("1"="Taxonomic descriptions from the literature
 to.odb$object = "Taxon"
 
 #import
-odb_import_taxons(to.odb,odb_cfg=cfg)
+odb_import_traits(to.odb,odb_cfg=cfg)
 
 ```
-### Spectral traits
+## Spectral traits
 
 Spectral traits are specific to spectral data. You must specify the range of wavenumber values for which you may have absorbance or reflectance data, and the length of the spectra to be stored as measurements to allow validation during input. So, for each range and spacement of the spectral values you have, a different SPECTRAL trait must be created.
 
-### Genebank trait
+## Genebank trait
 
-To be included in OpenDataBio - a link of a voucher or individua to a specific GeneBank accession.
+To be included in OpenDataBio - a link of a voucher or individual to a specific GeneBank accession. This will permit to link and ODB record to a genebank accession and therefore, to download molecular data from GeneBank and annotate it with the current ODB taxonomic identity.
 
 
-## Import Measurements  (Data into Datasets)
+# Import Measurements
 
 Measurements are straightforward. You need to provide a dataset (for which you do have permissions), trait_id, value (content varies depending on trait type), date (a complete or incomplete date), person (id of person that measured), object_type (taxon, plant, voucher or location) and object_id. For LINK trait type, you must provide a link_id column, and 'value' becomes optional for this specific case.
 
 Measurement have one restriction in the API: duplicated measurements values or categories for the same object_id and date will not be imported, unless you specify a 'duplicated=1' entry in the import table.
 
-TIP: To link measurements in different traits you may add standard keys to the 'note' measurement field. For example, you measure LeafLength and LeafWidth from the same leaves, so in both cases add "leaf1" ,"leaf2", .. to the note field. Also, you measure DBH and DBH.POM in a forest plot inventory and have several stems for a plant, you may add "stem1","stem2" to permit matching a stem DBH to its specific height of measurement. This kind of link may be useful in analyses.
+TIP: To link measurements in different traits you may add standard keys to the 'note' measurement field. For example, you measure LeafLength and LeafWidth from the same leaves, so in both cases add "leaf1" ,"leaf2", .. to the note field. Also, you measure DBH and DBH.POM in a forest plot inventory and have several stems for a plant, you may add "stem1","stem2" to permit matching a stem DBH to its specific height of measurement. This kind of link may be useful in analyses. 
 
-Several validations will happen during measurement importation. Consider verifying locality before submitting a job to facilitate troubleshooting and guarantee the values are consistent with your expectations. You will not be able to UPDATE measurements with the API, so, avoid importing several measurements that will require fixing afterwards (one by one).
+Several validations will happen during measurement importation. Consider verifying the data locally before submitting a job to facilitate troubleshooting, and guarantee the values are consistent with your expectations. You will not be able to UPDATE nor DELETE measurements with the API, so, avoid importing several measurements that will require fixing afterwards (one by one).
 
-### Columns for measurements
-
-#### Mandatory
-
+## Mandatory columns
 1. trait_id - the trait_id or export_name
 1. value - depends on trait type (see examples) - optional for LINK trait type
 1. date - the date the measurement was made (fundamental for monitoring)
@@ -637,27 +678,29 @@ Several validations will happen during measurement importation. Consider verifyi
 1. bibreference - either a bibkey or a bib_id for a BibReference in the system
 1. link_id - only for LINK_TYPE traits - must be the id to the type of LINK the trait refers to
 
-#### Optional
+## Optional
 1. notes - any note you want, but see TIP above
-1. duplicated - with value 1 to allow duplicated measurements in the same date for the sabe object and trait
+1. duplicated - with value 1 to allow duplicated measurements in the same date for the same object and trait
 
-### Quantitative measurements
+## Quantitative measurements
 
 OpenDataBio will not be able to test whether your measurements are in the same unit as the Trait definition. Therefore, check which unit the trait has, and convert accordingly before uploading your data.
 
 ```
 #get the trait id from the server (check that trait exists)
 odbtraits = odb_get_traits(odb_cfg=cfg)
-(m = match(c("DBH","DBHpom"),odbtraits$export_name))
-to.odb = data.frame(trait_id = odbtraits$id[m], value = c(24.5,1.3), date = '2020-07-31', object_type = 'Plant', stringsAsFactors=F)
+(m = match(c("dbh","dbhPom"),odbtraits$export_name))
+to.odb = data.frame(trait_id = odbtraits$id[m], value = c(24.5,1.3), date = '2020-07-31', object_type = 'Individual', stringsAsFactors=F)
 
-to.odb$notes = "stem1΅ #both are from the same
+to.odb$notes = "stem1΅ #both are from the same stem
 
 #check MEASUREMENT UNIT for trait and make sure your data conform, otherwise convert
 odbtraits$unit[m]
 
-#get plant id from API (must be ID not tag. If you add a tag and there is an id matching the tag, the measurement will be misplaced.
-odbplant = odb_get_plants(params=list(tag='1234'),odb_cfg=cfg)
+#get individual id from API
+# must be ID not tag. If you add a numeric tag and there is an id matching the tag
+# the measurement will be misplaced.
+odbplant = odb_get_individuals(params=list(tag='1234'),odb_cfg=cfg)
 head(odbplant)
 to.odb$object_id = odbplant$id
 
@@ -667,40 +710,37 @@ head(odbdatasets)
 to.odb$dataset = odbdataset$id
 
 #person that measured
-odbperson = odb_get_people(params=list(search='chalom'),odb_cfg=cfg)
-odbperson
+odbperson = odb_get_persons(params=list(search='chalom'),odb_cfg=cfg)
 to.odb$person = odbperson$id
 
 odb_import_measurements(to.odb,odb_cfg=cfg)
 ```
-### Categorical measurements
+## Categorical measurements
 
 Categories MUST be informed by their ids in the value field. For CATEGORICAL or ORDINAL traits, value may have a single id. For CATEGORICAL_MULTIPLE, may be one or multiple categories ids, that may be a string with ids separated by commas or list with the ids as values.
 
 ```
 #get the trait id from the server (check that trait exists)
 odbtraits = odb_get_traits(odb_cfg=cfg)
-(m = match(c("SpecimenFertility"),odbtraits$export_name))
+(m = match(c("specimenFertility"),odbtraits$export_name))
 
 #base line
 to.odb = data.frame(trait_id = odbtraits$id[m], date = '2020-07-31', stringsAsFactors=F)
-
 #the plant was collected with both flowers and fruits
 value = c("Flowers","Fruits")
-
 #get categories for this trait if found
 (cats = odbtraits$categories[m][[1]])
-
 #check that your categories are registered for the trait and get their ids
 value = cats[match(value,cats$name),'id']
-
 #make multiple categories ids a string value
 value = paste(value,collapse=",")
+
 to.odb$value = value
 
 #this links to a specimen
 to.odb$object_type = "Voucher"
-#get voucher id from API (must be ID). Search for collection number 1234
+#get voucher id from API (must be ID). 
+#Search for collection number 1234
 odbspecs = odb_get_vouchers(params=list(number='1234'),odb_cfg=cfg)
 odbspecs$fullname
 to.odb$object_id = odbspecs$id[1]
@@ -711,7 +751,7 @@ head(odbdatasets)
 to.odb$dataset = odbdataset$id
 
 #person that measured
-odbperson = odb_get_people(params=list(search='chalom'),odb_cfg=cfg)
+odbperson = odb_get_persons(params=list(search='chalom'),odb_cfg=cfg)
 odbperson
 to.odb$person = odbperson$id
 
@@ -719,14 +759,14 @@ odb_import_measurements(to.odb,odb_cfg=cfg)
 
 ```
 
-### Color measurements
+## Color measurements
 
 For color values you have to enter color as their 'hex RGB strings' codes. Therefore, any color value is allowed, and it would be easier to use the palette colors in the web interface to enter such measurements. Package `gplots` allows you to convert color names to hex RGB codes if you want to do it through the API.
 
 ```
 #get the trait id from the server (check that trait exists)
 odbtraits = odb_get_traits(odb_cfg=cfg)
-(m = match(c("FruitMainColor"),odbtraits$export_name))
+(m = match(c("fruitMainColor"),odbtraits$export_name))
 
 #base line
 to.odb = data.frame(trait_id = odbtraits$id[m], date = '2020-07-31', stringsAsFactors=F)
@@ -749,19 +789,19 @@ head(odbdatasets)
 to.odb$dataset = odbdataset$id
 
 #person that measured
-odbperson = odb_get_people(params=list(search='chalom'),odb_cfg=cfg)
+odbperson = odb_get_persons(params=list(search='chalom'),odb_cfg=cfg)
 odbperson
 to.odb$person = odbperson$id
 
 odb_import_measurements(to.odb,odb_cfg=cfg)
 
 ```
-### Database link type measurements
+## Database link type measurements
 
 ```
 #get the trait id from the server (check that trait exists)
 odbtraits = odb_get_traits(odb_cfg=cfg)
-(m = match(c("TaxonCount"),odbtraits$export_name))
+(m = match(c("taxonCount"),odbtraits$export_name))
 
 #base line
 to.odb = data.frame(trait_id = odbtraits$id[m], date = '2020-07-31', stringsAsFactors=F)
@@ -771,11 +811,12 @@ odbtax = odb_get_taxons(params=list(name='Euterpe precatoria'),odb_cfg=cfg)
 to.odb$link_id = odbtax$id
 
 #now add the count value for this trait type 
-#this is optional for this measurement, however, it would make no sense to include such link without a count in this example
+#this is optional for this measurement, 
+#however, it would make no sense to include such link without a count in this example
 to.odb$value = 23 
 
 #a note to clarify the measurement (optional)
-to.odb$notes = 'First15minInterval' 
+to.odb$notes = 'First 15min Interval' 
 
 #this measurement will link to a location
 to.odb$object_type = "Location"
@@ -790,14 +831,14 @@ head(odbdatasets)
 to.odb$dataset = odbdataset$id
 
 #person that measured
-odbperson = odb_get_people(params=list(search='chalom'),odb_cfg=cfg)
+odbperson = odb_get_persons(params=list(search='chalom'),odb_cfg=cfg)
 odbperson
 to.odb$person = odbperson$id
 
 odb_import_measurements(to.odb,odb_cfg=cfg)
 
 ```
-### Spectral measurements
+## Spectral measurements
 
 Value must be a string with spectrum values separated by ";"
 
@@ -805,7 +846,7 @@ The number of values must match the Trait value_length attribute. So, you may ea
 
 Otherwise, proceed as above.
 
-### Text measurements
+## Text measurements
 
 Just add the text to the value field and proceed as above.
 

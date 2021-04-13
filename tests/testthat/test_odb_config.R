@@ -5,7 +5,7 @@ test_that("odb_config with defaults", {
     cfg = odb_config();
     expect_is(cfg, "list")
     expect_is(cfg$base_url, "character")
-    expect_equal(cfg$base_url, "http://opendatabio.ib.usp.br/opendatabio/api/v0")
+    expect_equal(cfg$base_url, "http://localhost/opendatabio/api/v0")
     expect_is(cfg$headers, "request")
     expect_match(cfg$headers$headers["Accept"], "application/json")
     expect_match(cfg$headers$options$useragent, "opendatabio")
@@ -28,7 +28,7 @@ test_that("odb_config with null version", {
     cfg = odb_config(api_version = NULL);
     expect_is(cfg, "list")
     expect_is(cfg$base_url, "character")
-    expect_equal(cfg$base_url, "http://opendatabio.ib.usp.br/opendatabio/api") 
+    expect_equal(cfg$base_url, "http://localhost/opendatabio/api") 
 })
 
 test_that("odb_config with ENV variables", {
