@@ -28,9 +28,11 @@ You can set the environment variables ODB_BASE_URL, ODB_TOKEN and ODB_API_VERSIO
 if you need to use the \code{odb_config} function explicitly if you need more flexibility.
 }
 \examples{
+\dontrun{
 cfg = odb_config(
    base_url = "http://localhost/opendatabio/api", 
    token = "ABCDEF", 
    api_version = "v0"
 )
+}
 }

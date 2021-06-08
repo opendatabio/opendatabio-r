@@ -33,7 +33,7 @@ test_that("odb_get_taxons works with defaults", {
 
 test_that("odb_get_taxons works with trailing slashes", { 
     internal_clear_env();
-    tx = odb_get_taxons(list(limit=10), odb_config("http://opendatabio.ib.usp.br/opendatabio/api/"))
+    tx = odb_get_taxons(list(limit=10), odb_config("http://localhost/opendatabio/api/"))
     expect_is(tx, "data.frame")
     expect_equal(nrow(tx), 10)
 })
@@ -45,9 +45,9 @@ test_that("odb_get_locations works with defaults", {
     expect_equal(nrow(tx), 10)
 })
 
-test_that("odb_get_people works with defaults", { 
+test_that("odb_get_persons works with defaults", { 
     internal_clear_env();
-    tx = odb_get_people(list(limit=10))
+    tx = odb_get_persons(list(limit=10))
     expect_is(tx, "data.frame")
     expect_equal(nrow(tx), 10)
 })

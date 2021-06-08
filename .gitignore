@@ -3,3 +3,6 @@
 .RData
 .*.swp
 inst/
+.Rproj.user
+.Rproj
+.Rbuildignore

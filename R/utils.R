@@ -104,11 +104,13 @@ odb_params <- function(params = list(), encode = TRUE) {
 #' @param api_version character. Use this to specify the API version to connect to. You can set this to NULL to connect to the latest API, but this might break your code.
 #' @param \dots Further parameters to be passed to add_headers. 
 #' @examples
+#' \dontrun{
 #' cfg = odb_config(
 #'    base_url = "http://localhost/opendatabio/api", 
 #'    token = "ABCDEF", 
 #'    api_version = "v0"
 #' )
+#' }
 #' @export
 #' @import httr
 odb_config <- function(base_url, token, api_version, ...) {
@@ -118,7 +120,7 @@ odb_config <- function(base_url, token, api_version, ...) {
         if (Sys.getenv("ODB_BASE_URL") != "") {
             cfg$base_url = Sys.getenv("ODB_BASE_URL")
         } else { 
-            cfg$base_url = "http://opendatabio.ib.usp.br/opendatabio/api"
+            cfg$base_url = "http://localhost/opendatabio/api"
         }
     } else {
         cfg$base_url = base_url
@@ -195,47 +197,55 @@ plot_locations = function(locations, ...) {
 #' @param data SpatialPolygonsDataFrame to be converted
 #' @param name_arg a vector of names to be used
 #' @param adm_level_arg a vector of adm_levels to be used
-sp_to_df = function(data, name_arg = NA, adm_level_arg = NA) {
-    if (class(data) != "SpatialPolygonsDataFrame") 
-        stop ("Currently sp_to_df only accepts SpatialPolygonsDataFrame")
-        warning("sp_to_df has been deprecated and will be removed in a future version!")
-    adm_level <- NA; parent <- NA; geom <- NA; datum <- NA
-    ## Extracts datum
-    str = data@proj4string@projargs
-    datum = gsub(".*datum=(.*?) .*", "\\1", str)
-
-    # Extract fields from gadm data
-    if('NAME_3' %in% names(data)) {
-        name = data$NAME_3
-        adm_level = 3
-        parent = data$NAME_2
-        geom = rgeos::writeWKT(data, TRUE)
-    } else if('NAME_2' %in% names(data)) {
-        name = data$NAME_2
-        adm_level = 2
-        parent = data$NAME_1 
-        geom = rgeos::writeWKT(data, TRUE)
-    } else if('NAME_1' %in% names(data)) {
-        name = data$NAME_1
-        adm_level = 1
-        parent = data$NAME_0
-        geom = rgeos::writeWKT(data, TRUE)
-    } else if('NAME_FAO' %in% names(data)) {
-        # TODO: check this!
-        name = data$NAME_FAO
-        adm_level = 0
-        parent = NA
-        geom = rgeos::writeWKT(data, FALSE)
-    }
-    if (length(geom) == 1 && is.na(geom))
-        geom = rgeos::writeWKT(data, TRUE)
-    # Uses fields from arguments
-    if (length(name_arg) > 1 || !is.na(name_arg))
-        name = name_arg
-    if (length(adm_level_arg) > 1 || !is.na(adm_level_arg))
-        adm_level = adm_level_arg
-    return (data.frame(name = name, adm_level = adm_level, parent = parent, datum=datum, geom=geom))
+sp_to_df <- function (data, name_arg = NA, adm_level_arg = NA) 
+{
+ if (class(data) != "SpatialPolygonsDataFrame") 
+  stop("Currently sp_to_df only accepts SpatialPolygonsDataFrame")
+ #warning("sp_to_df has been deprecated and will be removed in a future version!")
+ adm_level <- NA
+ parent <- NA
+ geom <- NA
+ datum <- NA
+ str = data@proj4string@projargs
+ datum = gsub(".*datum=(.*?) .*", "\\1", str)
+ if ("NAME_3" %in% names(data)) {
+  name = data$NAME_3
+  adm_level = 3
+  parent = data$NAME_2
+  geom = rgeos::writeWKT(data, TRUE)
+ }
+ else if ("NAME_2" %in% names(data)) {
+  name = data$NAME_2
+  adm_level = 2
+  parent = data$NAME_1
+  geom = rgeos::writeWKT(data, TRUE)
+ }
+ else if ("NAME_1" %in% names(data)) {
+  name = data$NAME_1
+  adm_level = 1
+  parent = data$NAME_0
+  geom = rgeos::writeWKT(data, TRUE)
+ }
+ else if ("NAME_FAO" %in% names(data) | "NAME_0" %in% names(data)) {
+  if ("NAME_FAO" %in% names(data)) {
+   name = data$NAME_FAO
+  } else {
+   name = data$NAME_0
+  }
+  adm_level = 0
+  parent = NA
+  geom = rgeos::writeWKT(data, FALSE)
+ }
+ if (length(geom) == 1 && is.na(geom)) 
+  geom = rgeos::writeWKT(data, TRUE)
+ if (length(name_arg) > 1 || !is.na(name_arg)) 
+  name = name_arg
+ if (length(adm_level_arg) > 1 || !is.na(adm_level_arg)) 
+  adm_level = adm_level_arg
+ return(data.frame(name = name, adm_level = adm_level, parent = parent, 
+                   datum = datum, geom = geom))
 }
+
 
 ##### Functions for formatting GET objects as data.frames
 safe_unlist = function(column, nrow) {
@@ -258,6 +268,33 @@ format_get_response = function(response, simplify) {
         data = as.data.frame(lapply(data, safe_unlist, nrow(data)), stringsAsFactors = FALSE)
     return(data)
 }
+
+format__get_response_categories <- function(x) {
+ if (!x%in%"") {
+  ll = fromJSON(x)
+  rr = NULL
+  for(i in 1:length(ll)) {
+   ii = unlist(ll[i])
+   names(ii) = c("id","name","description")
+   rr = rbind(rr,ii)
+  }
+  rownames(rr) = NULL
+  as.data.frame(rr,stringsAsFactors=F)
+ } else {
+  NA
+ }
+}
+
+format_get_bibresponse <- function (response, simplify) 
+{
+ data = fromJSON(toJSON(content(response)))$data
+ dt = unlist(data)
+ mm = matrix(dt,nrow=length(data),ncol=length(data[[1]]),byrow=TRUE)
+ mm = as.data.frame(mm, stringsAsFactors = FALSE)
+ colnames(mm) = names(data[[1]])
+ return(mm)
+}
+
 
 #' Wait for a running job
 #' 
