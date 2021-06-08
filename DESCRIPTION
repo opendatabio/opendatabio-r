@@ -1,12 +1,12 @@
 Package: opendatabio
 Title: Imports and Exports Data From an OpenDataBio Server
-Version: 0.4.1
+Version: 0.5.0
 Authors@R: c(
     person("Andre", "Chalom", email = "andrechalom@gmail.com", role = c("aut", "cre")),
     person("Alberto", "Vicentini", email = "vicentini.beto@gmail.com", role = c("aut")),
     person("Alexandre", "Adalardo", email = "aleadalardo@gmail.com", role = c("aut")))
 Description: This is an R package for interacting with OpenDataBio web services.
-    OpenDataBio is a system for storing and retrieving biological data - 
+    OpenDataBio is a system for storing and retrieving biological data -
     biodiversity and ecology. See our project page at https://github.com/opendatabio.
 Depends: R (>= 3.2.0)
 Imports: httr,
