@@ -17,6 +17,7 @@ Suggests: testthat,
           rgeos,
           knitr,
           taxize,
+          rmarkdown,
 License: GPL-3 | file LICENSE
 Encoding: UTF-8
 LazyData: true
