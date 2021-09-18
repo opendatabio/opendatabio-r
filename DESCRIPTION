@@ -16,7 +16,12 @@ Imports: httr,
 Suggests: testthat,
           rgeos,
           knitr,
+<<<<<<< HEAD
           rmarkdown
+=======
+          taxize,
+          rmarkdown,
+>>>>>>> e73571efe396e91bb7669db92d6b6db8b37096e5
 License: GPL-3 | file LICENSE
 Encoding: UTF-8
 LazyData: true
