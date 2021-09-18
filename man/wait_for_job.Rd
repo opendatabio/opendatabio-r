@@ -19,7 +19,7 @@ wait_for_job(job, odb_cfg = odb_config(), verbose = TRUE, interval = 10)
 data.frame, the final job object is silently returned to the user
 }
 \description{
-This function sleeps until a job finishes. It can be used to "queue" 
+This function sleeps until a job finishes. It can be used to "queue"
 jobs on the user side.
 }
 \examples{

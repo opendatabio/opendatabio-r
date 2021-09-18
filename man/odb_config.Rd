@@ -7,7 +7,7 @@
 odb_config(base_url, token, api_version, ...)
 }
 \arguments{
-\item{base_url}{character. The base URL for the API calls. It should start with the protocol ("http") 
+\item{base_url}{character. The base URL for the API calls. It should start with the protocol ("http")
 and end with "api". Defaults to OpenDataBio test server.}
 
 \item{token}{character. The API token for a registered user. The data that can be accessed will vary
@@ -30,8 +30,8 @@ if you need to use the \code{odb_config} function explicitly if you need more fl
 \examples{
 \dontrun{
 cfg = odb_config(
-   base_url = "http://localhost/opendatabio/api", 
-   token = "ABCDEF", 
+   base_url = "http://localhost/opendatabio/api",
+   token = "ABCDEF",
    api_version = "v0"
 )
 }

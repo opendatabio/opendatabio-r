@@ -43,15 +43,15 @@ odb_send_post = function(data, odb_cfg, endpoint, common) {
 #'
 #' This is normally used inside the getter functions. Note that if this function
 #' receives an unnamed character string, it returns the same string. This can be used to construct more
-#' complex queries. 
+#' complex queries.
 #'
 #' The 'encode' parameter is used to encode the parameter list, replacing special symbols with their corresponding
 #' hexadecimal representation so they can be used as an URL. For instance, 'Capão da Canoa' would be encoded as
 #' 'Cap%C3%A3o%20da%20Canoa'. Note that some special symbols such as = and & have special meaning in the URL scheme,
 #' so if you call \code{odb_params} using a literal string, these will be ignored. If you need to run a query using these
-#' symbols (such as if your locality name contains a &), you will need to use the list version of this function. 
+#' symbols (such as if your locality name contains a &), you will need to use the list version of this function.
 #' See the help on \code{\link[utils]{URLencode}} for the underlying encoding function.
-#' 
+#'
 #' @return character
 #' @param params named list or character string.
 #' @param encode logical. Should the strings be encoded to URL scheme?
@@ -90,24 +90,24 @@ odb_params <- function(params = list(), encode = TRUE) {
 }
 
 #' Generate the connection configuration
-#' 
-#' Use this function to generate a base configuration for all the other functions. 
+#'
+#' Use this function to generate a base configuration for all the other functions.
 #'
 #' You can set the environment variables ODB_BASE_URL, ODB_TOKEN and ODB_API_VERSION to avoid typing these at each script. Please note that
 #' if you need to use the \code{odb_config} function explicitly if you need more flexibility.
-#' 
+#'
 #' @return list
-#' @param base_url character. The base URL for the API calls. It should start with the protocol ("http") 
+#' @param base_url character. The base URL for the API calls. It should start with the protocol ("http")
 #' and end with "api". Defaults to OpenDataBio test server.
 #' @param token character. The API token for a registered user. The data that can be accessed will vary
 #' from user to user! Leave blank for anonymous login.
 #' @param api_version character. Use this to specify the API version to connect to. You can set this to NULL to connect to the latest API, but this might break your code.
-#' @param \dots Further parameters to be passed to add_headers. 
+#' @param \dots Further parameters to be passed to add_headers.
 #' @examples
 #' \dontrun{
 #' cfg = odb_config(
-#'    base_url = "http://localhost/opendatabio/api", 
-#'    token = "ABCDEF", 
+#'    base_url = "http://localhost/opendatabio/api",
+#'    token = "ABCDEF",
 #'    api_version = "v0"
 #' )
 #' }
@@ -119,14 +119,14 @@ odb_config <- function(base_url, token, api_version, ...) {
     if (missing(base_url)) {
         if (Sys.getenv("ODB_BASE_URL") != "") {
             cfg$base_url = Sys.getenv("ODB_BASE_URL")
-        } else { 
-            cfg$base_url = "http://localhost/opendatabio/api"
+        } else {
+            cfg$base_url = "http://localhost:8080/api"
         }
     } else {
         cfg$base_url = base_url
     }
 
-    if (missing (api_version)) {
+    if (missing(api_version)) {
         if (Sys.getenv("ODB_API_VERSION") != "") {
             api_version = Sys.getenv("ODB_API_VERSION")
         } else {
@@ -136,7 +136,7 @@ odb_config <- function(base_url, token, api_version, ...) {
     if (! is.null(api_version))
         cfg$base_url = paste(cfg$base_url, api_version, sep="/")
 
-    headers = c(accept("application/json"), 
+    headers = c(accept("application/json"),
                 content_type("application/json"),
                 user_agent(default_ua()))
 
@@ -167,7 +167,7 @@ default_ua = function() {
 #' Simple plotting function
 #'
 #' This is a plotting example for using rgeos with OpenDataBio data.
-#' 
+#'
 #' @export
 #' @import graphics
 #' @param locations data.frame, as returned by \code{\link{odb_get_locations}}
@@ -176,7 +176,7 @@ plot_locations = function(locations, ...) {
     dots = list(...)
     if (! is.data.frame(locations) || ! 'geom' %in% names(locations))
         stop("Locations needs to be a data.frame with a 'geom' column")
-    if (! requireNamespace("rgeos", quietly = TRUE)) 
+    if (! requireNamespace("rgeos", quietly = TRUE))
         stop("Please install rgeos: install.packages('rgeos')")
     wkts = c()
     if (! "main" %in% names(dots)) dots['main'] = "OpenDataBio locations plot"
@@ -188,18 +188,18 @@ plot_locations = function(locations, ...) {
 }
 
 #' Converts SpatialPolygonsDataFrame data for handling
-#' 
+#'
 #' This function converts SpatialPolygonsDataFrame to data.frame for easier importing to OpenDataBio.
-#' 
-#' This function requires that the suggested package 'rgeos' is installed. It fills some of the fields using 
+#'
+#' This function requires that the suggested package 'rgeos' is installed. It fills some of the fields using
 #' the data supplied, and works best with http://gadm.org data. NOTE: this function is deprecated and will be replaced by a more in-depth vignette.
 #' @export
 #' @param data SpatialPolygonsDataFrame to be converted
 #' @param name_arg a vector of names to be used
 #' @param adm_level_arg a vector of adm_levels to be used
-sp_to_df <- function (data, name_arg = NA, adm_level_arg = NA) 
+sp_to_df <- function (data, name_arg = NA, adm_level_arg = NA)
 {
- if (class(data) != "SpatialPolygonsDataFrame") 
+ if (class(data) != "SpatialPolygonsDataFrame")
   stop("Currently sp_to_df only accepts SpatialPolygonsDataFrame")
  #warning("sp_to_df has been deprecated and will be removed in a future version!")
  adm_level <- NA
@@ -236,13 +236,13 @@ sp_to_df <- function (data, name_arg = NA, adm_level_arg = NA)
   parent = NA
   geom = rgeos::writeWKT(data, FALSE)
  }
- if (length(geom) == 1 && is.na(geom)) 
+ if (length(geom) == 1 && is.na(geom))
   geom = rgeos::writeWKT(data, TRUE)
- if (length(name_arg) > 1 || !is.na(name_arg)) 
+ if (length(name_arg) > 1 || !is.na(name_arg))
   name = name_arg
- if (length(adm_level_arg) > 1 || !is.na(adm_level_arg)) 
+ if (length(adm_level_arg) > 1 || !is.na(adm_level_arg))
   adm_level = adm_level_arg
- return(data.frame(name = name, adm_level = adm_level, parent = parent, 
+ return(data.frame(name = name, adm_level = adm_level, parent = parent,
                    datum = datum, geom = geom))
 }
 
@@ -251,10 +251,10 @@ sp_to_df <- function (data, name_arg = NA, adm_level_arg = NA)
 safe_unlist = function(column, nrow) {
     # Replaces "named list()" with NA as values
     column = lapply(column, function (x) {
-                        if(length(x)==0) 
+                        if(length(x)==0)
                             return(NA)
                         return (x)
-                    })
+             })
     ret = unlist(column)
     # Replaces "data.frame with 0 columns"
     if (is.null(ret))
@@ -268,37 +268,46 @@ format_get_response = function(response, simplify) {
         data = as.data.frame(lapply(data, safe_unlist, nrow(data)), stringsAsFactors = FALSE)
     return(data)
 }
-
-format__get_response_categories <- function(x) {
- if (!x%in%"") {
-  ll = fromJSON(x)
-  rr = NULL
-  for(i in 1:length(ll)) {
-   ii = unlist(ll[i])
-   names(ii) = c("id","name","description")
-   rr = rbind(rr,ii)
-  }
-  rownames(rr) = NULL
-  as.data.frame(rr,stringsAsFactors=F)
- } else {
-  NA
- }
-}
-
-format_get_bibresponse <- function (response, simplify) 
+format_get_bibresponse <- function (response, simplify)
 {
- data = fromJSON(toJSON(content(response)))$data
- dt = unlist(data)
- mm = matrix(dt,nrow=length(data),ncol=length(data[[1]]),byrow=TRUE)
- mm = as.data.frame(mm, stringsAsFactors = FALSE)
- colnames(mm) = names(data[[1]])
- return(mm)
+  data = fromJSON(toJSON(content(response)))$data
+  dt = unlist(data)
+  mm = matrix(dt,nrow=length(data),ncol=length(data[[1]]),byrow=TRUE)
+  mm = as.data.frame(mm, stringsAsFactors = FALSE)
+  colnames(mm) = names(data[[1]])
+  return(mm)
 }
+
+##specific to traits
+format_get_response_traits = function(response, simplify) {
+  data = fromJSON(toJSON(content(response)))$data
+  if (!simplify) {
+    return(data)
+  }
+  categories = data$categories
+  data$categories = NA
+  data = as.data.frame(lapply(data, safe_unlist, nrow(data)), stringsAsFactors = FALSE)
+  lc = sapply(categories,length)
+  if (max(lc)>0) {
+    categories = lapply(categories, safe_unlist_categories)
+    data$categories = categories
+  }
+  return(data)
+}
+
+safe_unlist_categories = function(cat) {
+  if (length(cat)==0) {
+    return(NA)
+  }
+  cat[] = lapply(cat,safe_unlist,length(cat))
+  return(cat)
+}
+
 
 
 #' Wait for a running job
-#' 
-#' This function sleeps until a job finishes. It can be used to "queue" 
+#'
+#' This function sleeps until a job finishes. It can be used to "queue"
 #' jobs on the user side.
 #' @param job Either a number representing a job id, or the response from a odb_import_* call
 #' @param verbose logical. Should this function print job progress to screen?
@@ -324,7 +333,7 @@ wait_for_job = function(job, odb_cfg = odb_config(), verbose = TRUE, interval = 
         job = odb_get_jobs(list(id=job$id, fields=fields), odb_cfg)
     }
     cat("Job id", job$id, "finished as", job$status, "\n")
-    invisible(job) 
+    invisible(job)
 }
 
 get_eta = function(job) {

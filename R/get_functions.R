@@ -1,6 +1,6 @@
 #' Connection and data download functions
 #'
-#' These are some basic functions to interact with the API and download data. 
+#' These are some basic functions to interact with the API and download data.
 #' See the full help on the package vignettes.
 #' @examples
 #' \dontrun{
@@ -29,38 +29,45 @@ odb_test <- function(odb_cfg = odb_config()) {
 
 #' @export
 #' @rdname get_functions
-odb_get_bibreferences <- function (params = list(), odb_cfg = odb_config(), simplify = TRUE) 
+odb_get_bibreferences <- function (params = list(), odb_cfg = odb_config(), simplify = TRUE)
 {
  response = odb_send_get(params, odb_cfg, "bibreferences")
  format_get_bibresponse(response)
 }
 
-#' @export 
+#' @export
 #' @rdname get_functions
-odb_get_datasets <- function (params = list(), odb_cfg = odb_config(), simplify = TRUE) 
+odb_get_datasets <- function (params = list(), odb_cfg = odb_config(), simplify = TRUE)
 {
  response = odb_send_get(params, odb_cfg, "datasets")
  format_get_response(response, simplify)
 }
 
-#' @export 
+#' @export
 #' @rdname get_functions
-odb_get_biocollections <- function (params = list(), odb_cfg = odb_config(), simplify = TRUE) 
+odb_get_biocollections <- function (params = list(), odb_cfg = odb_config(), simplify = TRUE)
 {
  response = odb_send_get(params, odb_cfg, "biocollections")
  format_get_response(response, simplify)
 }
 
-#' @export 
+#' @export
 #' @rdname get_functions
 odb_get_individuals <- function(params = list(), odb_cfg = odb_config(), simplify = TRUE) {
  response = odb_send_get(params, odb_cfg, "individuals")
  format_get_response(response, simplify)
-}	
+}
 
 #' @export
 #' @rdname get_functions
-odb_get_languages <- function (params = list(), odb_cfg = odb_config(), simplify = TRUE) 
+odb_get_occurrences <- function(params = list(), odb_cfg = odb_config(), simplify = TRUE) {
+    response = odb_send_get(params, odb_cfg, "individual-locations")
+    format_get_response(response, simplify)
+}
+
+#' @export
+#' @rdname get_functions
+odb_get_languages <- function (params = list(), odb_cfg = odb_config(), simplify = TRUE)
 {
  response = odb_send_get(params, odb_cfg, "languages")
  format_get_response(response, simplify)
@@ -74,25 +81,25 @@ odb_get_locations <- function(params = list(), odb_cfg = odb_config(), simplify 
 }
 
 
-#' @export 
+#' @export
 #' @rdname get_functions
-odb_get_measurements <- function (params = list(), odb_cfg = odb_config(), simplify = TRUE) 
+odb_get_measurements <- function (params = list(), odb_cfg = odb_config(), simplify = TRUE)
 {
  response = odb_send_get(params, odb_cfg, "measurements")
  format_get_response(response, simplify)
 }
 
-#' @export 
+#' @export
 #' @rdname get_functions
 odb_get_persons <- function(params = list(), odb_cfg = odb_config(), simplify = TRUE) {
     response = odb_send_get(params, odb_cfg, "persons")
     format_get_response(response, simplify)
-}	
+}
 
 
-#' @export 
+#' @export
 #' @rdname get_functions
-odb_get_projects <- function (params = list(), odb_cfg = odb_config(), simplify = TRUE) 
+odb_get_projects <- function (params = list(), odb_cfg = odb_config(), simplify = TRUE)
 {
  response = odb_send_get(params, odb_cfg, "projects")
  format_get_response(response, simplify)
@@ -105,22 +112,19 @@ odb_get_taxons <- function(params = list(), odb_cfg = odb_config(), simplify = T
  format_get_response(response, simplify)
 }
 
-#' @export 
+#' @export
 #' @rdname get_functions
-odb_get_traits <- function (params = list(), odb_cfg = odb_config(), simplify = TRUE) 
+odb_get_traits <- function (params = list(), odb_cfg = odb_config(), simplify = TRUE)
 {
  response = odb_send_get(params, odb_cfg, "traits")
- response = format_get_response(response, simplify)
- response$categories = sapply(response$categories,format__get_response_categories) 
+ response = format_get_response_traits(response, simplify)
  response
 }
 
-#' @export 
+#' @export
 #' @rdname get_functions
-odb_get_vouchers <- function (params = list(), odb_cfg = odb_config(), simplify = TRUE) 
+odb_get_vouchers <- function (params = list(), odb_cfg = odb_config(), simplify = TRUE)
 {
- response = odb_send_get(params, odb_cfg, "samples")
+ response = odb_send_get(params, odb_cfg, "vouchers")
  format_get_response(response, simplify)
 }
-
-

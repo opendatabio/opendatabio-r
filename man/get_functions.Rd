@@ -6,6 +6,7 @@
 \alias{odb_get_datasets}
 \alias{odb_get_biocollections}
 \alias{odb_get_individuals}
+\alias{odb_get_occurrences}
 \alias{odb_get_languages}
 \alias{odb_get_locations}
 \alias{odb_get_measurements}
@@ -29,6 +30,8 @@ odb_get_biocollections(
 )
 
 odb_get_individuals(params = list(), odb_cfg = odb_config(), simplify = TRUE)
+
+odb_get_occurrences(params = list(), odb_cfg = odb_config(), simplify = TRUE)
 
 odb_get_languages(params = list(), odb_cfg = odb_config(), simplify = TRUE)
 
@@ -57,7 +60,7 @@ odb_get_vouchers(params = list(), odb_cfg = odb_config(), simplify = TRUE)
 odb_get methods usually return a \code{data.frame} is simplify=TRUE, but that depends on the JSON response received from the server.
 }
 \description{
-These are some basic functions to interact with the API and download data. 
+These are some basic functions to interact with the API and download data.
 See the full help on the package vignettes.
 }
 \examples{

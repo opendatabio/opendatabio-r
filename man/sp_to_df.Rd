@@ -17,6 +17,6 @@ sp_to_df(data, name_arg = NA, adm_level_arg = NA)
 This function converts SpatialPolygonsDataFrame to data.frame for easier importing to OpenDataBio.
 }
 \details{
-This function requires that the suggested package 'rgeos' is installed. It fills some of the fields using 
+This function requires that the suggested package 'rgeos' is installed. It fills some of the fields using
 the data supplied, and works best with http://gadm.org data. NOTE: this function is deprecated and will be replaced by a more in-depth vignette.
 }

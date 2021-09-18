@@ -54,11 +54,11 @@ These are some basic functions to interact with the API to import data and monit
 }
 \examples{
 \dontrun{
-data = data.frame( 
-  name = c("Euterpe oleracea", "Euterpe edulis"), 
-  parent = "Euterpe"
+data = data.frame(
+  name = c("Euterpe oleracea", "Euterpe edulis"),
+  parent = "Euterpe",
+  level=odb_taxonLevelCodes('species'),
 )
-common = list(level = "species")
-odb_import_taxons(data, cfg, common)
+odb_import_taxons(data, cfg)
 }
 }
